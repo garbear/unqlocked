@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout>
+	<background height="10" width="11">
+		I,L,N,E,S,T,O,U,N,E,R,
+		D,E,U,X,N,U,T,R,O,I,S,
+		Q,U,A,T,R,E,D,O,U,Z,E,
+		C,I,N,Q,S,I,X,S,E,P,T,
+		H,U,I,T,N,E,U,F,D,I,X,
+		O,N,Z,E,R,H,E,U,R,E,S,
+		M,O,I,N,S,O,L,E,D,I,X,
+		E,T,X,B,M,C,Q,U,A,R,T
+		V,I,N,G,T,-,C,I,N,Q,U,
+		E,T,S,D,E,M,I,E,P,A,N
+	</background>
+	<times>
+		<time id="12:35">il est %1h% heure moins %25m%</time>
+		<time id="12:45">il est %1h% heure moins le %15m%</time>
+		<time id="12:50">il est %1h% heure moins %10m%</time>
+		<time id="1:00">il est %1h% heure</time>
+		<time id="1:05">il est %1h% heure %5m%</time>
+		<time id="1:15">il est %1h% heure et %15m%</time>
+		<time id="1:20">il est %1h% heure %20m%</time>
+		<time id="1:30">il est %1h% heure et %30m%</time>
+		<time id="1:35">il est %2h% heures moins %25m%</time>
+		<time id="1:45">il est %2h% heures moins le %15m%</time>
+		<time id="1:50">il est %2h% heures moins %10m%</time>
+		<time id="2:00">il est %2h% heures</time>
+		<time id="2:05">il est %2h% heures %5m%</time>
+		<time id="2:15">il est %2h% heures et %15m%</time>
+		<time id="2:20">il est %2h% heures %20m%</time>
+		<time id="2:30">il est %2h% heures et %30m%</time>
+	</times>
+	<strings>
+		<string id="1">une</string>
+		<string id="2">duex</string>
+		<string id="3">trois</string>
+		<string id="4">quatre</string>
+		<string id="5">cinq</string>
+		<string id="6">six</string>
+		<string id="7">sept</string>
+		<string id="8">huit</string>
+		<string id="9">neuf</string>
+		<string id="10">dix</string>
+		<string id="11">onze</string>
+		<string id="12">douze</string>
+		<string id="15">quart</string>
+		<string id="20">vingt</string>
+		<string id="25">vingt-cinq</string>
+		<string id="30">demie</string>
+	</strings>
+</layout>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout>
+		<!-- QLOCKTWO -->
+	<background height="10" width="11">
+		E,S,O,N,E,L,A,S,U,N,A,
+		D,O,S,I,T,R,E,S,O,R,E,
+		C,U,A,T,R,O,C,I,N,C,O,
+		S,E,I,S,A,S,I,E,T,E,N,
+		O,C,H,O,N,U,E,V,E,Y,O,
+		L,A,D,I,E,Z,S,O,N,C,E,
+		D,O,C,E,L,Y,M,E,N,O,S,
+		O,V,E,I,N,T,E,D,I,E,Z,
+		V,E,I,N,T,I,C,I,N,C,O,
+		M,E,D,I,A,C,U,A,R,T,O
+	</background>
+		<!-- Transparency! -->
+	<background height="10" width="11">
+		S,O,N,X,E,S,B,L,A,S,M,
+		U,N,A,D,O,S,T,R,E,S,C,
+		C,U,A,T,R,O,C,I,N,C,O,
+		S,E,I,S,S,I,E,T,E,S,P,
+		O,C,H,O,N,U,E,V,E,A,I,
+		D,I,E,Z,O,N,C,E,X,B,M,
+		D,O,C,E,C,Y,M,E,N,O,S,
+		V,E,I,N,T,E,C,I,N,C,O,
+		M,E,D,I,A,C,U,A,R,T,O,
+		E,N,D,I,E,Z,P,U,N,T,O
+	</background>
+	<times>
+		<time id="12:35">es la %1h% menos %25m%</time>
+		<time id="1:00">es la %1h%</time>
+		<time id="1:05">es la %1h% y %5m%</time>
+		<time id="1:35">son las %2h% menos %25m%</time>
+		<time id="2:00">son las %2h%</time>
+		<time id="2:05">son las %2h% y %5m%</time>
+	</times>
+	<strings>
+		<string id="1">una</string>
+		<string id="2">dos</string>
+		<string id="3">tres</string>
+		<string id="4">cuatro</string>
+		<string id="5">cinco</string>
+		<string id="6">seis</string>
+		<string id="7">siete</string>
+		<string id="8">ocho</string>
+		<string id="9">nueve</string>
+		<string id="10">dies</string>
+		<string id="11">once</string>
+		<string id="12">doce</string>
+		<string id="15">cuarto</string>
+		<string id="20">veinte</string>
+		<string id="25">veinticinco</string>
+		<string id="30">media</string>
+	</strings>
+</layout>

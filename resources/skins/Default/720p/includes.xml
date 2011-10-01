@@ -1,0 +1,91 @@
+<includes>
+	<include name="QlockWindowProperties">
+		<animation effect="fade" time="800">WindowOpen</animation>
+	</include>
+	<include name="QlockDimBackground">
+		<control type="image">
+			<posx>0</posx>
+			<posy>0</posy>
+			<width>1280</width>
+			<height>720</height>
+			<colordiffuse>BBFFFFFF</colordiffuse>
+			<texture>unqlocked-1px-black.png</texture>
+		</control>
+	</include>
+	<include name="QlockBackground">
+		<control type="image">
+			<posx>428</posx>
+			<posy>165</posy>
+			<width>425</width>
+			<height>390</height>
+			<texture border="10">qlock.png</texture>
+		</control>
+	</include>
+	<include name="QlockMinuteDots">
+		<control type="group">
+			<posx>443</posx><!-- 15 + 428 -->
+			<posy>185</posy><!-- 20 + 165 -->
+			<!--<visible>Container.Scrolling</visible>-->
+			<control type="button" id="5096">
+				<posx>0</posx>
+				<posy>0</posy>
+				<width>5</width>
+				<height>5</height>
+				<font>font-22</font>
+				<textwidth>20</textwidth>
+				<align>center</align>
+				<textcolor>darkblue</textcolor>
+				<disabledcolor>darkgrey</disabledcolor>
+				<label>[B]°[/B]</label>
+				<texturenofocus>-</texturenofocus>
+				<texturefocus>-</texturefocus>
+				<enable>stringcompare(System.Time(mm),01) | stringcompare(System.Time(mm),11) | stringcompare(System.Time(mm),21) | stringcompare(System.Time(mm),31) | stringcompare(System.Time(mm),41) | stringcompare(System.Time(mm),51) | stringcompare(System.Time(mm),06,right) | stringcompare(System.Time(mm),16,right) | stringcompare(System.Time(mm),26,right) | stringcompare(System.Time(mm),36,right) | stringcompare(System.Time(mm),46,right) | stringcompare(System.Time(mm),56,right) | Control.isEnabled(5097)</enable>
+			</control>
+			<control type="button" id="5097">
+				<posx>390</posx>
+				<posy>0</posy>
+				<width>5</width>
+				<height>5</height>
+				<font>font-22</font>
+				<textwidth>20</textwidth>
+				<align>center</align>
+				<textcolor>darkblue</textcolor>
+				<disabledcolor>darkgrey</disabledcolor>
+				<label>[B]°[/B]</label>
+				<texturenofocus>-</texturenofocus>
+				<texturefocus>-</texturefocus>
+				<enable>stringcompare(System.Time(mm),02) | stringcompare(System.Time(mm),12) | stringcompare(System.Time(mm),22) | stringcompare(System.Time(mm),32) | stringcompare(System.Time(mm),42) | stringcompare(System.Time(mm),52) | stringcompare(System.Time(mm),07) | stringcompare(System.Time(mm),17) | stringcompare(System.Time(mm),27) | stringcompare(System.Time(mm),37) | stringcompare(System.Time(mm),47) | stringcompare(System.Time(mm),57) | Control.isEnabled(5098)</enable>
+			</control>
+			<control type="button" id="5098">
+				<posx>0</posx>
+				<posy>354</posy>
+				<width>5</width>
+				<height>5</height>
+				<font>font-22</font>
+				<textwidth>20</textwidth>
+				<align>center</align>
+				<textcolor>darkblue</textcolor>
+				<disabledcolor>darkgrey</disabledcolor>
+				<label>[B]°[/B]</label>
+				<texturenofocus>-</texturenofocus>
+				<texturefocus>-</texturefocus>
+				<enable>stringcompare(System.Time(mm),03) | stringcompare(System.Time(mm),13) | stringcompare(System.Time(mm),23) | stringcompare(System.Time(mm),33) | stringcompare(System.Time(mm),43) | stringcompare(System.Time(mm),53) | stringcompare(System.Time(mm),08) | stringcompare(System.Time(mm),18) | stringcompare(System.Time(mm),28) | stringcompare(System.Time(mm),38) | stringcompare(System.Time(mm),48) | stringcompare(System.Time(mm),58) | Control.isEnabled(5099)</enable>
+			</control>
+			<control type="button" id="5099">
+				<posx>390</posx>
+				<posy>354</posy>
+				<width>5</width>
+				<height>5</height>
+				<font>font-22</font>
+				<textwidth>20</textwidth>
+				<align>center</align>
+				<textcolor>darkblue</textcolor>
+				<disabledcolor>darkgrey</disabledcolor>
+				<label>[B]°[/B]</label>
+				<texturenofocus>-</texturenofocus>
+				<texturefocus>-</texturefocus>
+				<enable>stringcompare(System.Time(mm),04) | stringcompare(System.Time(mm),14) | stringcompare(System.Time(mm),24) | stringcompare(System.Time(mm),34) | stringcompare(System.Time(mm),44) | stringcompare(System.Time(mm),54) | stringcompare(System.Time(mm),09) | stringcompare(System.Time(mm),19) | stringcompare(System.Time(mm),29) | stringcompare(System.Time(mm),39) | stringcompare(System.Time(mm),49) | stringcompare(System.Time(mm),59)</enable>
+			</control>
+		</control>
+	</include>
+</includes>

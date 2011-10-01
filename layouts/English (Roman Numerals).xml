@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout>
+	<background height="9" width="10">
+		I,T,V,I,S,L,N,X,I,X,
+		X,X,I,I,I,X,V,I,I,I,
+		X,X,I,V,I,H,O,U,R,S,
+		V,A,N,D,I,X,X,X,I,V,
+		X,X,X,I,X,L,I,I,I,V,
+		X,L,V,I,I,I,X,L,I,V,
+		X,X,X,I,I,I,X,L,I,X,
+		L,X,X,X,V,I,I,I,V,I,
+		N,V,I,M,I,N,U,T,E,S
+	</background>
+	<!--<background>
+		IT IS
+		N XVIII XXIV XIx XXIII
+		HOURS AND
+		XXXIII XXXIV XXXVIII XXXIx XLIII XLIV XLVIII XLIx N
+		MINUTES
+	</background>-->
+	<times>
+		<time id="1:00">it is %1h% hour and %0m% minutes</time>
+		<time id="1:01">it is %1h% hour and %1m% minute</time>
+		<time id="1:02">it is %1h% hour and %2m% minutes</time>
+		<time id="2:00">it is %2h% hours and %0m% minutes</time>
+		<time id="2:01">it is %2h% hours and %1m% minute</time>
+		<time id="2:02">it is %2h% hours and %2m% minutes</time>
+		<time id="24:00">it is %0h% hours and %0m% minutes</time>
+	</times>
+	<strings>
+		<string id="0" desc="nulla">N</string>
+		<string id="1">I</string>
+		<string id="2">II</string>
+		<string id="3">III</string>
+		<string id="4">IV</string>
+		<string id="5">V</string>
+		<string id="6">VI</string>
+		<string id="7">VII</string>
+		<string id="8">VIII</string>
+		<string id="9">IX</string>
+		<string id="10">X</string>
+		<string id="11">XI</string>
+		<string id="12">XII</string>
+		<string id="13">XIII</string>
+		<string id="14">XIV</string>
+		<string id="15">XV</string>
+		<string id="16">XVI</string>
+		<string id="17">XVII</string>
+		<string id="18">XVIII</string>
+		<string id="19">XIX</string>
+		<string id="20">XX</string>
+		<string id="21">XXI</string>
+		<string id="22">XXII</string>
+		<string id="23">XXIII</string>
+		<string id="24">XXIV</string>
+		<string id="25">XXV</string>
+		<string id="26">XXVI</string>
+		<string id="27">XXVII</string>
+		<string id="28">XXVIII</string>
+		<string id="29">XXIX</string>
+		<string id="30">XXX</string>
+		<string id="31">XXXI</string>
+		<string id="32">XXXII</string>
+		<string id="33">XXXIII</string>
+		<string id="34">XXXIV</string>
+		<string id="35">XXXV</string>
+		<string id="36">XXXVI</string>
+		<string id="37">XXXVII</string>
+		<string id="38">XXXVIII</string>
+		<string id="39">XXXIX</string>
+		<string id="40">XL</string>
+		<string id="41">XLI</string>
+		<string id="42">XLII</string>
+		<string id="43">XLIII</string>
+		<string id="44">XLIV</string>
+		<string id="45">XLV</string>
+		<string id="46">XLVI</string>
+		<string id="47">XLVII</string>
+		<string id="48">XLVIII</string>
+		<string id="49">XLIX</string>
+		<string id="50">L</string>
+		<string id="51">LI</string>
+		<string id="52">LII</string>
+		<string id="53">LIII</string>
+		<string id="54">LIV</string>
+		<string id="55">LV</string>
+		<string id="56">LVI</string>
+		<string id="57">LVII</string>
+		<string id="58">LVIII</string>
+		<string id="59">LIX</string>
+	</strings>
+</layout>

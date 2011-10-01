@@ -1,0 +1,23 @@
+settings
+
+Choose clock (maybe use option="close")
+
+language (spinner)
+clock (spinner for choice of xml from language folder)
+size (spinner for choice of dimensions from clock xml)
+
+<setting label="30510" id="language" type="fileenum" values="layouts" mask=".xml" options="hideext" default="English" />
+
+
+options
+
+sep
+
+http://www.qlocktwo.com/press_images.php
+color theme (Black Ice Tea, Vanilla Sugar / Alaska, Stainless Steel, Lime Juice, Frozen Blackberry, Cherry Cake, Dark Chocolate, Blue Candy)
+
+sep
+
+debug...
+Debug mode button
+force time (debug mode)

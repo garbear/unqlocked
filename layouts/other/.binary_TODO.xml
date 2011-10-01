@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout>
+	<background>
+		I,T,L,I,S,A,S,T,I,M,E,
+		A,C,Q,U,A,R,T,E,R,D,C,
+		T,W,E,N,T,Y,F,I,V,E,X,
+		H,A,L,F,B,T,E,N,F,T,O,
+		P,A,S,T,E,R,U,N,I,N,E,
+		O,N,E,S,I,X,T,H,R,E,E,
+		F,O,U,R,F,I,V,E,T,W,O,
+		E,I,G,H,T,E,L,E,V,E,N,
+		S,E,V,E,N,T,W,E,L,V,E,
+		T,E,N,S,E,O',C,L,O,C,K
+	</background>
+	<times>
+		<time id="12:00">it is %12 hours and %0 minutes</time>
+		<time id="12:01">it is %12 hours and %1 minute</time>
+		<time id="12:02">it is %12 hours and %1 minutes</time>
+		<time id="1:00">it is %1 hour and %0 minutes</time>
+		<time id="1:01">it is %1 hour and %1 minute</time>
+		<time id="1:02">it is %1 hour and %1 minutes</time>
+	</times>
+	<strings>
+		<string id="0">0</string>
+		<string id="1">1</string>
+		<string id="2">10</string>
+		<string id="3">11</string>
+		<string id="4">100</string>
+		<string id="5">101</string>
+		<string id="6">110</string>
+		<string id="7">111</string>
+		<string id="8">1000</string>
+		<string id="9">1001</string>
+		<string id="10">1010</string>
+		<string id="11">1011</string>
+		<string id="12">1100</string>
+		<string id="13">1101</string>
+		<string id="14">1110</string>
+		<string id="15">1111</string>
+		<string id="16">10000</string>
+		<string id="17">10001</string>
+		<string id="18">10010</string>
+		<string id="19">10011</string>
+		<string id="20">10100</string>
+		<string id="21">10101</string>
+		<string id="22">10110</string>
+		<string id="23">10111</string>
+		<string id="24">11000</string>
+		<string id="25">11001</string>
+		<string id="26">11010</string>
+		<string id="27">11011</string>
+		<string id="28">11100</string>
+		<string id="29">11101</string>
+		<string id="30">11110</string>
+		<string id="31">11111</string>
+		<string id="32">100000</string>
+		<string id="33">100001</string>
+		<string id="34">100010</string>
+		<string id="35">100011</string>
+		<string id="36">100100</string>
+		<string id="37">100101</string>
+		<string id="38">100110</string>
+		<string id="39">100111</string>
+		<string id="40">101000</string>
+		<string id="41">101001</string>
+		<string id="42">101010</string>
+		<string id="43">101011</string>
+		<string id="44">101100</string>
+		<string id="45">101101</string>
+		<string id="46">101110</string>
+		<string id="47">101111</string>
+		<string id="48">110000</string>
+		<string id="49">110001</string>
+		<string id="50">110010</string>
+		<string id="51">110011</string>
+		<string id="52">110100</string>
+		<string id="53">110101</string>
+		<string id="54">110110</string>
+		<string id="55">110111</string>
+		<string id="56">111000</string>
+		<string id="57">111001</string>
+		<string id="58">111010</string>
+		<string id="59">111011</string>
+	</strings>
+</layout>

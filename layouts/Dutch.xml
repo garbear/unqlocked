@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout>
+		<!-- QLOCKTWO -->
+	<background height="10" width="11">
+		H,E,T,K,I,S,A,V,I,J,F,
+		T,I,E,N,B,T,Z,V,O,O,R,
+		O,V,E,R,M,E,K,W,A,R,T,
+		H,A,L,F,S,P,W,O,V,E,R,
+		V,O,O,R,T,H,G,É,É,N,S,
+		T,W,E,E,P,V,C,D,R,I,E,
+		V,I,E,R,V,I,J,F,Z,E,S,
+		Z,E,V,E,N,O,N,E,G,E,N,
+		A,C,H,T,T,I,E,N,E,L,F,
+		T,W,A,A,L,F,B,F,U,U,R
+	</background>
+		<!-- Transparency! -->
+	<background height="10" width="11">
+		H,E,T,G,I,S,T,E,R,E,N,
+		0,V,I,J,F,T,I,E,N,E,R,
+		T,O,M,I,N,U,T,E,N,I,S,
+		Q,K,W,A,R,T,S,V,O,O,R,
+		T,O,V,E,R,T,H,A,L,F,S,
+		E,E,N,T,W,E,E,D,R,I,E,
+		V,I,E,R,V,I,J,F,Z,E,S,
+		Z,E,V,E,N,0,N,E,G,E,N,
+		A,C,H,T,T,I,E,N,E,L,F,
+		E,T,W,A,A,L,F,P,U,U,R
+	</background>
+	<times>
+		<time id="1:00">het is %1h% uur</time>
+		<time id="1:05">het is %5m% over %1h%</time>
+		<time id="1:20">het is tien voor half %2h%</time>
+		<time id="1:25">het is vijf voor half %2h%</time>
+		<time id="1:30">het is half %2h%</time>
+		<time id="1:35">het is vijf over half %2h%</time>
+		<time id="1:40">het is tien over half %2h%</time>
+		<time id="1:45">het is %15m% voor %2h%</time>
+	</times>
+	<strings>
+		<string id="1">een</string>
+		<string id="2">twee</string>
+		<string id="3">drie</string>
+		<string id="4">vier</string>
+		<string id="5">vijf</string>
+		<string id="6">zes</string>
+		<string id="7">zeven</string>
+		<string id="8">acht</string>
+		<string id="9">negen</string>
+		<string id="10">tien</string>
+		<string id="11">elf</string>
+		<string id="12">twaalf</string>
+		<string id="15">kwart</string>
+	</strings>
+</layout>

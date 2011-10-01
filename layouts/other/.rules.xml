@@ -1,0 +1,10 @@
+<rules>
+	<rule type="bool" name="use_24hr">IntegerGreaterThan(id.hour,12)</rule>
+	<rule type="bool" name="start_with_0">StringCompare(time.hour,0)</rule>
+	<!-- Find the smallest id.minute where id.hour != time.hour, (taking the previous two conditions into account) -->
+	<!-- For example, this will return 35 on the entry: <time id="12:35">it is %25m% to %1h%</time> -->
+	<rule type="int" name="round_up_minutes" value="id.minute" match="min" default="60">!StringCompare(id.hour,value.hour) + !(start_with_0 + ((!use_24hr + StringCompare(id.hour,12)) | (use_24hr + StringCompare(id.hour,24))) + StringCompare(time.hour,0))</rule>
+	<rule type="bool" name="use_singular_hours"></rule>
+</rules>
+
+Resolution: 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60

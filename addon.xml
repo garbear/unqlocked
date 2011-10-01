@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.unqlocked"
+       name="UnQlocked"
+       version="1.0"
+       provider-name="Garrett a.k.a. Garbear">
+  <requires>
+    <import addon="xbmc.python" version="1.0"/>
+  </requires>
+  <extension point="xbmc.python.script"
+             library="default.py"/>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">UnQlocked script</summary>
+    <description lang="en">Script to display the current time using common phrases instead of numbers. Originally an unabashed ripoff of Biegert &amp; Funk's awesome QLOCKTWO, this script has been extended to support a much larger set of languages and configurations.</description>
+    <platform>all</platform>
+  </extension>
+</addon>

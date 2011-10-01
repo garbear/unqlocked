@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout>
+		<!-- Transparency! -->
+	<background height="10" width="11">
+		E,S,K,I,S,T,A,F,Ü,N,F,
+		Z,E,H,N,Z,W,A,N,Z,I,G,
+		V,I,E,R,T,E,L,X,V,O,R,
+		N,A,C,H,A,J,U,H,A,L,B,
+		E,I,N,S,L,M,E,Z,W,E,I,
+		D,R,E,I,A,U,J,V,I,E,R,
+		F,Ü,N,F,T,O,S,E,C,H,S,
+		S,I,E,B,E,N,L,A,C,H,T,
+		N,E,U,N,Z,E,H,N,E,L,F,
+		Z,W,Ö,L,F,U,N,K,U,H,R
+	</background>
+		<!-- QLOCKTWO -->
+	<background>
+		E,S,K,I,S,T,A,F,Ü,N,F,
+		Z,E,H,N,Z,W,A,N,Z,I,G,
+		D,R,E,I,V,I,E,R,T,E,L,
+		V,O,R,F,U,N,K,N,A,C,H,
+		H,A,L,B,A,E,L,F,Ü,N,F,
+		E,I,N,S,X,Ä,M,Z,W,E,I,
+		D,R,E,I,A,U,J,V,I,E,R,
+		S,E,C,H,S,N,L,A,C,H,T,
+		S,I,E,B,E,N,Z,W,Ö,L,F,
+		Z,E,H,N,E,U,N,K,U,H,R
+	</background>
+	<times>
+		<time id="1:00">es ist %1h% uhr</time>
+		<time id="1:05">es ist %5m% nach %1h%</time>
+		<time id="1:25">es ist fünf vor halb %2h%</time>
+		<time id="1:30">es ist %30m% %2h%</time>
+		<time id="1:35">es ist fünf nach halb %2h%</time>
+		<time id="1:40">es ist %20m% vor %2h%</time>
+		<time id="12:25">es ist fünf vor halb %1h%s</time>
+		<time id="12:30">es ist %30m% %1h%</time>
+		<time id="12:35">es ist fünf nach halb %1h%s</time>
+		<time id="12:40">es ist %20m% vor %1h%s</time>
+	</times>
+	<strings>
+		<string id="1">ein</string>
+		<string id="2">zwei </string>
+		<string id="3">drei</string>
+		<string id="4">vier</string>
+		<string id="5">fünf</string>
+		<string id="6">sechs </string>
+		<string id="7">sieben</string>
+		<string id="8">acht</string>
+		<string id="9">neun</string>
+		<string id="10">zehn</string>
+		<string id="11">elf</string>
+		<string id="12">zwölf</string>
+		<string id="15">viertel</string>
+		<string id="20">zwanzig</string>
+		<string id="30">halb</string>
+	</strings>
+</layout>
