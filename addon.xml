@@ -2,10 +2,14 @@
 <addon id="script.unqlocked"
        name="UnQlocked"
        version="1.0"
-       provider-name="Garrett a.k.a. Garbear">
+       provider-name="Garrett (garbear)">
   <requires>
     <import addon="xbmc.python" version="1.0"/>
   </requires>
+  <!--
+  <extension point="xbmc.ui.screensaver"
+             library="default.py"/>
+  -->
   <extension point="xbmc.python.script"
              library="default.py"/>
   <extension point="xbmc.addon.metadata">
