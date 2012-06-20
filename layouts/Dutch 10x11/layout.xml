@@ -14,6 +14,7 @@
 		T,W,A,A,L,F,B,F,U,U,R
 	</background>
 		<!-- Transparency! -->
+	<!--
 	<background height="10" width="11">
 		H,E,T,G,I,S,T,E,R,E,N,
 		0,V,I,J,F,T,I,E,N,E,R,
@@ -26,6 +27,7 @@
 		A,C,H,T,T,I,E,N,E,L,F,
 		E,T,W,A,A,L,F,P,U,U,R
 	</background>
+	-->
 	<times>
 		<time id="1:00">het is %1h% uur</time>
 		<time id="1:05">het is %5m% over %1h%</time>

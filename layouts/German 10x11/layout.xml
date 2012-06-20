@@ -14,6 +14,7 @@
 		Z,W,Ö,L,F,U,N,K,U,H,R
 	</background>
 		<!-- QLOCKTWO -->
+	<!--
 	<background>
 		E,S,K,I,S,T,A,F,Ü,N,F,
 		Z,E,H,N,Z,W,A,N,Z,I,G,
@@ -26,6 +27,7 @@
 		S,I,E,B,E,N,Z,W,Ö,L,F,
 		Z,E,H,N,E,U,N,K,U,H,R
 	</background>
+	-->
 	<times>
 		<time id="1:00">es ist %1h% uhr</time>
 		<time id="1:05">es ist %5m% nach %1h%</time>
