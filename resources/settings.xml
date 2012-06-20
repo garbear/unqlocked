@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+	<setting label="30000" id="language" type="fileenum" mask=".xml" option="hideext" values="layouts" default="English 10x11" />
+	<!--<setting type="sep" />-->
+	<setting label="30001" id="theme" type="fileenum" mask=".xml" option="hideext" values="themes" default="Black Ice Tea" />
+	<setting label="30002" id="sprites" type="bool" default="true" />
+	<!-- Preview button -->
+</settings>

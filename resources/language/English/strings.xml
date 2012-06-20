@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<strings>
+	<!-- Addon settings -->
+	<string id="30000">Layout</string>
+	<string id="30001">Theme</string>
+	<string id="30002">Minute markers</string>
+</strings>

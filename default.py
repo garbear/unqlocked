@@ -22,25 +22,22 @@ from unqlocked import log, WINDOW_ID
 
 import unqlocked.controller
 
-
 class Config:
 	def __init__(self):
 		self.scriptId  = "script.unqlocked"
 		self.addon     = xbmcaddon.Addon(self.scriptId)
 		self.addonName = self.addon.getAddonInfo('name')
-		self.addonname = self.addon.getAddonInfo('name')
 		self.cwd       = self.addon.getAddonInfo('path')
 		self.author    = self.addon.getAddonInfo('author')
 		self.version   = self.addon.getAddonInfo('version')
 		self.language  = self.addon.getLocalizedString
 		self.layoutDir = xbmc.translatePath(os.path.join(self.cwd, 'layouts'))
+		self.themeDir  = xbmc.translatePath(os.path.join(self.cwd, 'themes'))
 		self.dataDir   = os.path.join("special://profile/addon_data/%s/" % self.scriptId)
 		# Workaround: open() doesn't translate path correctly on some versions
 		self.dataDir = xbmc.translatePath(self.dataDir)
 
 config = Config()
-
-
 
 if (__name__ == "__main__"):
 	controller = unqlocked.controller.Master(config)
@@ -51,5 +48,4 @@ if (__name__ == "__main__"):
 # Every timeout, asks the solver to generate the next state
 # Sends the state to the view so that the GUI can be updated
 # Controller watches for exit events and/or keyboard events
-
 
