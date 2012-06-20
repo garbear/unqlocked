@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout>
+		<!-- QLOCKTWO -->
+	<background height="10" width="11">
+		I,T,L,I,S,A,S,T,I,M,E,
+		A,C,Q,U,A,R,T,E,R,D,C,
+		T,W,E,N,T,Y,F,I,V,E,X,
+		H,A,L,F,B,T,E,N,F,T,O,
+		P,A,S,T,E,R,U,N,I,N,E,
+		O,N,E,S,I,X,T,H,R,E,E,
+		F,O,U,R,F,I,V,E,T,W,O,
+		E,I,G,H,T,E,L,E,V,E,N,
+		S,E,V,E,N,T,W,E,L,V,E,
+		T,E,N,S,E,O',C,L,O,C,K
+	</background>
+	<times>
+		<time id="1:00">it is %1h% o'clock</time>
+		<time id="1:05">it is %5m% past %1h%</time>
+		<time id="1:35">it is %25m% to %2h%</time>
+	</times>
+	<strings>
+		<string id="1">one</string>
+		<string id="2">two</string>
+		<string id="3">three</string>
+		<string id="4">four</string>
+		<string id="5">five</string>
+		<string id="6">six</string>
+		<string id="7">seven</string>
+		<string id="8">eight</string>
+		<string id="9">nine</string>
+		<string id="10">ten</string>
+		<string id="11">eleven</string>
+		<string id="12">twelve</string>
+		<string id="15">a quarter</string>
+		<string id="20">twenty</string>
+		<string id="25">twenty five</string>
+		<string id="30">half</string>
+	</strings>
+</layout>
