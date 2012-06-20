@@ -13,10 +13,9 @@
 # *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 # *  http://www.gnu.org/copyleft/gpl.html
 
-import os, sys
+import os
 import xbmc
 import xbmcaddon
-from elementtree.ElementTree import ElementTree
 
 from unqlocked import log, WINDOW_ID
 
@@ -41,7 +40,7 @@ config = Config()
 
 if (__name__ == "__main__"):
 	controller = unqlocked.controller.Master(config)
-	controller.spin()
+	#controller.spin()
 
 
 # Controller internally keeps track of update interval (timeouts)

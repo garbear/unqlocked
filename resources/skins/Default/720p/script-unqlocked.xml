@@ -129,8 +129,8 @@
 			<focusedlayout height="35" width="35"/>
 			<content>
 				<item>
-					<label>A</label>
-					<label2>A</label2>
+					<label>$INFO[Window(Home).Property(Unqlocked.0.Background)]</label>
+					<label2>$INFO[Window(Home).Property(Unqlocked.0.Highlight)]</label2>
 					<onclick>-</onclick>
 				</item>
 				<item>

@@ -1,0 +1,62 @@
+<window id="3000">
+  <controls>
+    <control type="panel">
+      <posx>455</posx>
+      <posy>185</posy>
+      <width>385</width>
+      <height>350</height>
+      <onleft>-</onleft>
+      <onright>-</onright>
+      <onup>-</onup>
+      <ondown>-</ondown>
+      <viewtype label="">panel</viewtype>
+      <pagecontrol>-</pagecontrol>
+      <scrolltime>-</scrolltime>
+      <hitrect h="1" w="1" x="-10" y="-10" />
+      <itemlayout height="350" width="385">
+        <control type="label">
+          <posx>10</posx>
+          <posy>0</posy>
+          <width>35</width>
+          <height>35</height>
+          <font>font-22</font>
+          <textcolor>5e5a57</textcolor>
+          <selectedcolor>5e5a57</selectedcolor>
+          <align>center</align>
+          <aligny>center</aligny>
+          <label>[B]$INFO[ListItem.Label][/B]</label>
+        </control>
+        <control type="label">
+          <posx>10</posx>
+          <posy>0</posy>
+          <width>35</width>
+          <height>35</height>
+          <font>font-22</font>
+          <textcolor>f8f4f1</textcolor>
+          <selectedcolor>f8f4f1</selectedcolor>
+          <align>center</align>
+          <aligny>center</aligny>
+          <label>[B]$INFO[ListItem.Label][/B]</label>
+        </control>
+      </itemlayout>
+      <focusedlayout height="350" width="385" />
+      <content>
+        <item>
+          <label>$INFO[Window(Home).Property(Unqlocked.0.Background)]</label>
+          <label2>$INFO[Window(Home).Property(Unqlocked.0.Highlight)]</label2>
+          <onclick>-</onclick>
+        </item>
+        <item>
+          <label>$INFO[Window(Home).Property(Unqlocked.1.Background)]</label>
+          <label2>$INFO[Window(Home).Property(Unqlocked.1.Highlight)]</label2>
+          <onclick>-</onclick>
+        </item>
+        <item>
+          <label>$INFO[Window(Home).Property(Unqlocked.2.Background)]</label>
+          <label2>$INFO[Window(Home).Property(Unqlocked.2.Highlight)]</label2>
+          <onclick>-</onclick>
+        </item>
+      </content>
+    </control>
+  </controls>
+</window>
