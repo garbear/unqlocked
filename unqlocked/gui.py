@@ -48,26 +48,16 @@ class Matrix:
 		# <control type="label">
 		subControl = SubElement(itemlayout, 'control', type='label')
 		if True:
-			# <posx>
-			SubElement(subControl, 'posx').text = str(10)
-			# <posy>
-			SubElement(subControl, 'posy').text = str(0)
-			# <width>
-			SubElement(subControl, 'width').text = str(self.letterWidth)
-			# <height>
-			SubElement(subControl, 'height').text = str(self.letterHeight)
-			# <font>
-			SubElement(subControl, 'font').text = 'font-22' # self.theme.font
-			# <textcolor>
-			SubElement(subControl, 'textcolor').text = color
-			# <selectedcolor>
-			SubElement(subControl, 'selectedcolor').text = color
-			# <align>center</align>
-			SubElement(subControl, 'align').text = 'center'
-			# <aligny>center</aligny>
-			SubElement(subControl, 'aligny').text = 'center'
-			# <label>[B]$INFO[ListItem.Label][/B]</label>
-			SubElement(subControl, 'label').text = '[B]$INFO[%s][/B]' % infolabel
+			SubElement(subControl, 'posx').text = str(10) # <posx>
+			SubElement(subControl, 'posy').text = str(0) # <posy>
+			SubElement(subControl, 'width').text = str(self.letterWidth) # <width>
+			SubElement(subControl, 'height').text = str(self.letterHeight) # <height>
+			SubElement(subControl, 'font').text = 'font-22' # self.theme.font # <font>
+			SubElement(subControl, 'textcolor').text = color # <textcolor>
+			SubElement(subControl, 'selectedcolor').text = color # <selectedcolor>
+			SubElement(subControl, 'align').text = 'center' # <align>center</align>
+			SubElement(subControl, 'aligny').text = 'center' # <aligny>center</aligny>
+			SubElement(subControl, 'label').text = '[B]$INFO[%s][/B]' % infolabel # <label>[B]$INFO[ListItem.Label][/B]</label>
 		# </control>
 	
 	def toXML(self):
@@ -75,38 +65,25 @@ class Matrix:
 		# <control type="panel">
 		control = Element('control', type='panel')
 		if True:
-			# <posx>
-			SubElement(control, 'posx').text = str(self.posx)
-			# <posy>
-			SubElement(control, 'posy').text = str(self.posy)
-			# <width>
-			SubElement(control, 'width').text = str(self.width)
-			# <height>
-			SubElement(control, 'height').text = str(self.height)
-			# <onleft>-</onleft>
-			SubElement(control, 'onleft').text = '-'
-			# <onright>-</onright>
-			SubElement(control, 'onright').text = '-'
-			# <onup>-</onup>
-			SubElement(control, 'onup').text = '-'
-			# <ondown>-</ondown>
-			SubElement(control, 'ondown').text = '-'
-			# <viewtype label="">panel</viewtype>
-			SubElement(control, 'viewtype', label='').text = 'panel'
-			# <pagecontrol>-</pagecontrol>
-			SubElement(control, 'pagecontrol').text = '-'
-			# <scrolltime>-</scrolltime>
-			SubElement(control, 'scrolltime').text = '-'
-			# <hitrect x="-10" y="-10" w="1" h="1" />
-			SubElement(control, 'hitrect', x=str(-10), y=str(-10), w=str(1), h=str(1))
+			SubElement(control, 'posx').text = str(self.posx) # <posx>
+			SubElement(control, 'posy').text = str(self.posy) # <posy>
+			SubElement(control, 'width').text = str(self.width) # <width>
+			SubElement(control, 'height').text = str(self.height) # <height>
+			SubElement(control, 'onleft').text = '-' # <onleft>-</onleft>
+			SubElement(control, 'onright').text = '-' # <onright>-</onright>
+			SubElement(control, 'onup').text = '-' # <onup>-</onup>
+			SubElement(control, 'ondown').text = '-' # <ondown>-</ondown>
+			SubElement(control, 'viewtype', label='').text = 'panel' # <viewtype label="">panel</viewtype>
+			SubElement(control, 'pagecontrol').text = '-' # <pagecontrol>-</pagecontrol>
+			SubElement(control, 'scrolltime').text = '-' # <scrolltime>-</scrolltime>
+			SubElement(control, 'hitrect', x=str(-10), y=str(-10), w=str(1), h=str(1)) # <hitrect x="-10" y="-10" w="1" h="1" />
 			# <itemlayout>
 			itemlayout = SubElement(control, 'itemlayout', height=str(self.height), width=str(self.width))
 			if True:
 				self.addItemLayout(itemlayout, self.theme.inactive, 'ListItem.Label')
 				self.addItemLayout(itemlayout, self.theme.active, 'ListItem.Label2')
-			# </itemlayout
-			# <focusedlayout height="35" width="35"/>
-			SubElement(control, 'focusedlayout', height=str(self.height), width=str(self.width))
+			# </itemlayout>
+			SubElement(control, 'focusedlayout', height=str(self.height), width=str(self.width)) # <focusedlayout height="35" width="35"/>
 			# <content>
 			content = SubElement(control, 'content')
 			if True:
@@ -133,16 +110,11 @@ class Background:
 		# <control>
 		control = Element('control', type='image')
 		if True:
-			# <posx>
-			SubElement(control, 'posx').text = str(428)
-			# <posy>
-			SubElement(control, 'posy').text = str(165)
-			# <width>
-			SubElement(control, 'width').text = str(425)
-			# <height>
-			SubElement(control, 'height').text = str(390)
-			# <texture border="10"></texture>
-			SubElement(control, 'texture', border=str(10)).text = 'qlock.png'
+			SubElement(control, 'posx').text = str(428) # <posx>
+			SubElement(control, 'posy').text = str(165) # <posy>
+			SubElement(control, 'width').text = str(425) # <width>
+			SubElement(control, 'height').text = str(390) # <height>
+			SubElement(control, 'texture', border=str(10)).text = 'qlock.png' # <texture border="10"></texture>
 		# </control>
 		return control
 
