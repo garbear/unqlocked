@@ -1,20 +1,10 @@
 from unqlocked import log, WINDOW_ID
-import elementtree.ElementTree as ElementTree
+from elementtree.ElementTree import Element, SubElement
 import xbmc, xbmcgui
-
 
 ACTION_PARENT_DIR = 9
 ACTION_PREVIOUS_MENU = 10
 ACTION_NAV_BACK = 92
-
-
-class MatrixGUI:
-	def __init__(self, solution, settings):
-		pass
-
-class SpritesGUI:
-	def __init__(self, settings):
-		pass
 
 
 PROPERTY_ACTIVE = 'Unqlocked.%i.Highlight'
@@ -28,17 +18,14 @@ class Letter:
 	def toXML(self):
 		'''Generate the xml representation of this Letter'''
 		# <item>
-		item = ElementTree.Element('item')
+		item = Element('item')
 		if True:
 			# <label>$INFO[Window(Home).Property(Unqlocked.0.Background)]</label>
-			label = ElementTree.SubElement(item, 'label')
-			label.text = '$INFO[Window(Home).Property(%s)]' % (PROPERTY_INACTIVE % self.index)
+			SubElement(item, 'label').text = '$INFO[Window(Home).Property(%s)]' % (PROPERTY_INACTIVE % self.index)
 			# <label2>$INFO[Window(Home).Property(Unqlocked.0.Highlight)]</label2>
-			label2 = ElementTree.SubElement(item, 'label2')
-			label2.text = '$INFO[Window(Home).Property(%s)]' % (PROPERTY_ACTIVE % self.index)
+			SubElement(item, 'label2').text = '$INFO[Window(Home).Property(%s)]' % (PROPERTY_ACTIVE % self.index)
 			# <onclick>-</onclick>
-			onclick = ElementTree.SubElement(item, 'onclick')
-			onclick.text = '-'
+			SubElement(item, 'onclick').text = '-'
 		# </item>
 		return item
 
@@ -56,124 +43,72 @@ class Matrix:
 		self.letterHeight = 35
 		self.letterWidth = 35
 	
+	def addItemLayout(self, itemlayout, color, infolabel):
+		'''infolabel is "ListItem.Label" or "ListItem.Label2"'''
+		# <control type="label">
+		subControl = SubElement(itemlayout, 'control', type='label')
+		if True:
+			# <posx>
+			SubElement(subControl, 'posx').text = str(10)
+			# <posy>
+			SubElement(subControl, 'posy').text = str(0)
+			# <width>
+			SubElement(subControl, 'width').text = str(self.letterWidth)
+			# <height>
+			SubElement(subControl, 'height').text = str(self.letterHeight)
+			# <font>
+			SubElement(subControl, 'font').text = 'font-22' # self.theme.font
+			# <textcolor>
+			SubElement(subControl, 'textcolor').text = color
+			# <selectedcolor>
+			SubElement(subControl, 'selectedcolor').text = color
+			# <align>center</align>
+			SubElement(subControl, 'align').text = 'center'
+			# <aligny>center</aligny>
+			SubElement(subControl, 'aligny').text = 'center'
+			# <label>[B]$INFO[ListItem.Label][/B]</label>
+			SubElement(subControl, 'label').text = '[B]$INFO[%s][/B]' % infolabel
+		# </control>
+	
 	def toXML(self):
 		'''Generate the xml representation of the letter matrix'''
 		# <control type="panel">
-		control = ElementTree.Element('control', type='panel')
+		control = Element('control', type='panel')
 		if True:
 			# <posx>
-			posx = ElementTree.SubElement(control, 'posx')
-			posx.text = str(self.posx)
+			SubElement(control, 'posx').text = str(self.posx)
 			# <posy>
-			posy = ElementTree.SubElement(control, 'posy')
-			posy.text = str(self.posy)
+			SubElement(control, 'posy').text = str(self.posy)
 			# <width>
-			width = ElementTree.SubElement(control, 'width')
-			width.text = str(self.width)
+			SubElement(control, 'width').text = str(self.width)
 			# <height>
-			height = ElementTree.SubElement(control, 'height')
-			height.text = str(self.height)
+			SubElement(control, 'height').text = str(self.height)
 			# <onleft>-</onleft>
-			onleft = ElementTree.SubElement(control, 'onleft')
-			onleft.text = '-'
+			SubElement(control, 'onleft').text = '-'
 			# <onright>-</onright>
-			onright = ElementTree.SubElement(control, 'onright')
-			onright.text = '-'
+			SubElement(control, 'onright').text = '-'
 			# <onup>-</onup>
-			onup = ElementTree.SubElement(control, 'onup')
-			onup.text = '-'
+			SubElement(control, 'onup').text = '-'
 			# <ondown>-</ondown>
-			ondown = ElementTree.SubElement(control, 'ondown')
-			ondown.text = '-'
+			SubElement(control, 'ondown').text = '-'
 			# <viewtype label="">panel</viewtype>
-			viewtype = ElementTree.SubElement(control, 'viewtype', label='')
-			viewtype.text = 'panel'
+			SubElement(control, 'viewtype', label='').text = 'panel'
 			# <pagecontrol>-</pagecontrol>
-			pagecontrol = ElementTree.SubElement(control, 'pagecontrol')
-			pagecontrol.text = '-'
+			SubElement(control, 'pagecontrol').text = '-'
 			# <scrolltime>-</scrolltime>
-			scrolltime = ElementTree.SubElement(control, 'scrolltime')
-			scrolltime.text = '-'
+			SubElement(control, 'scrolltime').text = '-'
 			# <hitrect x="-10" y="-10" w="1" h="1" />
-			hitrect = ElementTree.SubElement(control, 'hitrect', x=str(-10), y=str(-10), w=str(1), h=str(1))
+			SubElement(control, 'hitrect', x=str(-10), y=str(-10), w=str(1), h=str(1))
 			# <itemlayout>
-			itemlayout = ElementTree.SubElement(control, 'itemlayout', height=str(self.height), width=str(self.width))
+			itemlayout = SubElement(control, 'itemlayout', height=str(self.height), width=str(self.width))
 			if True:
-				# <control type="label">
-				subControl = ElementTree.SubElement(itemlayout, 'control', type='label')
-				if True:
-					# <posx>
-					posx = ElementTree.SubElement(subControl, 'posx')
-					posx.text = str(10)
-					# <posy>
-					posy = ElementTree.SubElement(subControl, 'posy')
-					posy.text = str(0)
-					# <width>
-					width = ElementTree.SubElement(subControl, 'width')
-					width.text = str(self.letterWidth)
-					# <height>
-					height = ElementTree.SubElement(subControl, 'height')
-					height.text = str(self.letterHeight)
-					# <font>
-					font = ElementTree.SubElement(subControl, 'font')
-					#font.text = self.theme.font
-					font.text = 'font-22'
-					# <textcolor>
-					textcolor = ElementTree.SubElement(subControl, 'textcolor')
-					textcolor.text = self.theme.inactive
-					# <selectedcolor>
-					selectedcolor = ElementTree.SubElement(subControl, 'selectedcolor')
-					selectedcolor.text = self.theme.inactive
-					# <align>center</align>
-					align = ElementTree.SubElement(subControl, 'align')
-					align.text = 'center'
-					# <aligny>center</aligny>
-					aligny = ElementTree.SubElement(subControl, 'aligny')
-					aligny.text = 'center'
-					# <label>[B]$INFO[ListItem.Label][/B]</label>
-					label = ElementTree.SubElement(subControl, 'label')
-					label.text = '[B]$INFO[ListItem.Label][/B]'
-				# </control>
-				# <control type="label">
-				subControl = ElementTree.SubElement(itemlayout, 'control', type='label')
-				if True:
-					# <posx>
-					posx = ElementTree.SubElement(subControl, 'posx')
-					posx.text = str(10)
-					# <posy>
-					posy = ElementTree.SubElement(subControl, 'posy')
-					posy.text = str(0)
-					# <width>
-					width = ElementTree.SubElement(subControl, 'width')
-					width.text = str(self.letterWidth)
-					# <height>
-					height = ElementTree.SubElement(subControl, 'height')
-					height.text = str(self.letterHeight)
-					# <font>
-					font = ElementTree.SubElement(subControl, 'font')
-					#font.text = self.theme.font
-					font.text = 'font-22'
-					# <textcolor>
-					textcolor = ElementTree.SubElement(subControl, 'textcolor')
-					textcolor.text = self.theme.active
-					# <selectedcolor>
-					selectedcolor = ElementTree.SubElement(subControl, 'selectedcolor')
-					selectedcolor.text = self.theme.active
-					# <align>center</align>
-					align = ElementTree.SubElement(subControl, 'align')
-					align.text = 'center'
-					# <aligny>center</aligny>
-					aligny = ElementTree.SubElement(subControl, 'aligny')
-					aligny.text = 'center'
-					# <label>[B]$INFO[ListItem.Label][/B]</label>
-					label = ElementTree.SubElement(subControl, 'label')
-					label.text = '[B]$INFO[ListItem.Label][/B]'
-				# </control>
+				self.addItemLayout(itemlayout, self.theme.inactive, 'ListItem.Label')
+				self.addItemLayout(itemlayout, self.theme.active, 'ListItem.Label2')
 			# </itemlayout
 			# <focusedlayout height="35" width="35"/>
-			focusedlayout = ElementTree.SubElement(control, 'focusedlayout', height=str(self.height), width=str(self.width))
+			SubElement(control, 'focusedlayout', height=str(self.height), width=str(self.width))
 			# <content>
-			content = ElementTree.SubElement(control, 'content')
+			content = SubElement(control, 'content')
 			if True:
 				# <item>
 				for letter in self.letters:
@@ -196,23 +131,18 @@ class Background:
 	# TODO: Don't hardcode width and height (notice the offsets)
 	def toXML(self):
 		# <control>
-		control = ElementTree.Element('control', type='image')
+		control = Element('control', type='image')
 		if True:
 			# <posx>
-			posx = ElementTree.SubElement(control, 'posx')
-			posx.text = str(428)
+			SubElement(control, 'posx').text = str(428)
 			# <posy>
-			posy = ElementTree.SubElement(control, 'posy')
-			posy.text = str(165)
+			SubElement(control, 'posy').text = str(165)
 			# <width>
-			width = ElementTree.SubElement(control, 'width')
-			width.text = str(425)
+			SubElement(control, 'width').text = str(425)
 			# <height>
-			height = ElementTree.SubElement(control, 'height')
-			height.text = str(390)
+			SubElement(control, 'height').text = str(390)
 			# <texture border="10"></texture>
-			texture = ElementTree.SubElement(control, 'texture', border=str(10))
-			texture.text = 'qlock.png'
+			SubElement(control, 'texture', border=str(10)).text = 'qlock.png'
 		# </control>
 		return control
 
@@ -225,11 +155,11 @@ class Window:
 	
 	def toXML(self):
 		# <window id="3000">
-		window = ElementTree.Element('window')
+		window = Element('window')
 		window.attrib['id'] = str(3000)
 		if True:
 			# <controls>
-			controls = ElementTree.Element('controls')
+			controls = Element('controls')
 			matrix = Matrix(self.letters, self.layout, self.theme)
 			controls.append(matrix.toXML())
 			#background = Background(self.theme)

@@ -36,7 +36,7 @@
           <selectedcolor>f8f4f1</selectedcolor>
           <align>center</align>
           <aligny>center</aligny>
-          <label>[B]$INFO[ListItem.Label][/B]</label>
+          <label>[B]$INFO[ListItem.Label2][/B]</label>
         </control>
       </itemlayout>
       <focusedlayout height="350" width="385" />
