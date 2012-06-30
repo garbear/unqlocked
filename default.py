@@ -13,13 +13,12 @@
 # *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 # *  http://www.gnu.org/copyleft/gpl.html
 
+from unqlocked import log, WINDOW_ID
+import unqlocked.controller
+
 import os
 import xbmc
 import xbmcaddon
-
-from unqlocked import log, WINDOW_ID
-
-import unqlocked.controller
 
 class Config:
 	def __init__(self):
@@ -32,7 +31,7 @@ class Config:
 		self.language  = self.addon.getLocalizedString
 		self.layoutDir = xbmc.translatePath(os.path.join(self.cwd, 'layouts'))
 		self.themeDir  = xbmc.translatePath(os.path.join(self.cwd, 'themes'))
-		self.dataDir   = os.path.join("special://profile/addon_data/%s/" % self.scriptId)
+		self.dataDir   = "special://profile/addon_data/%s/" % self.scriptId
 		# Workaround: open() doesn't translate path correctly on some versions
 		self.dataDir = xbmc.translatePath(self.dataDir)
 
@@ -40,7 +39,7 @@ config = Config()
 
 if (__name__ == "__main__"):
 	controller = unqlocked.controller.Master(config)
-	#controller.spin()
+	controller.spin()
 
 
 # Controller internally keeps track of update interval (timeouts)
