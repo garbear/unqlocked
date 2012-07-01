@@ -17,16 +17,16 @@ class UnqlockedWindow(xbmcgui.WindowXMLDialog):
 	
 	def onInit(self):
 		self.monitor = monitor.ExitMonitor(self.exit)
-		for i in range(self.layout.height):
-			for j in range(self.layout.width):
-				index = i * self.layout.width + j
-				WINDOW_HOME.setProperty(PROPERTY_INACTIVE % index, self.layout.matrix[i][j])
+	
+	def drawBackground(self):
+		for row in range(self.layout.height):
+			for col in range(self.layout.width):
+				index = row * self.layout.width + col
+				WINDOW_HOME.setProperty(PROPERTY_INACTIVE % index, self.layout.matrix[row][col])
 	
 	def onAction(self, action):
 		actionID = action.getId()
 		if (actionID in (ACTION_PREVIOUS_MENU, ACTION_NAV_BACK, ACTION_PARENT_DIR)):
-			log(WINDOW_HOME.getProperty(PROPERTY_INACTIVE % 0))
-			log(WINDOW_HOME.getProperty(PROPERTY_INACTIVE % 1))
 			self.close()
 	
 	def exit(self):
@@ -35,8 +35,8 @@ class UnqlockedWindow(xbmcgui.WindowXMLDialog):
 	def drawMatrix(self, truthMatrix):
 		for i in range(self.layout.height * self.layout.width):
 			WINDOW_HOME.clearProperty(PROPERTY_ACTIVE % i)
-		for i in range(self.layout.height):
-			for j in range(self.layout.width):
-				if truthMatrix[i][j]:
-					index = i * self.layout.height + j
-					WINDOW_HOME.setProperty(PROPERTY_ACTIVE % index, self.layout.matrix[i][j])
+		for row in range(self.layout.height):
+			for col in range(self.layout.width):
+				if truthMatrix[row][col]:
+					index = row * self.layout.width + col
+					WINDOW_HOME.setProperty(PROPERTY_ACTIVE % index, self.layout.matrix[row][col])

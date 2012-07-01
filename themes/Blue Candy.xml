@@ -2,7 +2,7 @@
 	<preview>
 		http://www.qlocktwo.com/downloads/TOUCH/DEUTSCH/Q2Touch_BlueCandy_de_screen.jpg
 	</preview>
-	<background>008ac9</background>
-	<active>cbe8ee</active>
-	<inactive>205869</inactive>
+	<background>ff008ac9</background>
+	<active>ffcbe8ee</active>
+	<inactive>ff205869</inactive>
 </theme>

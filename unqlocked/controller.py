@@ -27,6 +27,7 @@ class Master:
 		# Now create the GUI window
 		self.window = window.UnqlockedWindow('unqlocked.xml', config.dataDir, 'Default')
 		self.window.setLayout(config.layout)
+		self.window.drawBackground()
 		
 		# Create the threads
 		self.qlockThread = thread.QlockThread(self.window, config)

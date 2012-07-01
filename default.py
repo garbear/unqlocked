@@ -38,16 +38,49 @@ class Config:
 		self.themeDir  = xbmc.translatePath(os.path.join(self.cwd, 'themes'))
 		self.theme     = Theme(os.path.join(self.themeDir, self.addon.getSetting('theme') + '.xml'))
 
+class Time(object):
+	def __init__(self, hours, minutes = 0, seconds = 0):
+		if isinstance(hours, int):
+			self.hours = hours
+			self.minutes = minutes
+			self.seconds = seconds
+		elif isinstance(hours, str):
+			parts = hours.split(':')
+			self.hours   = int(parts[0]) if len(parts) >= 1 else 0
+			self.minutes = int(parts[1]) if len(parts) >= 2 else 0
+			self.seconds = int(parts[2]) if len(parts) >= 3 else 0
+	
+	def __hash__(self):
+		return hash((self.hours, self.minutes, self.seconds))
+	
+	def __eq__(self, other):
+		return (self.hours, self.minutes, self.seconds) == (other.hours, other.minutes, other.seconds)
+	
+	def __str__(self):
+		if self.seconds:
+			return '%d:%02d:%02d' % (self.hours, self.minutes, self.seconds)
+		else:
+			return '%d:%02d' % (self.hours, self.minutes)
+
 class Layout:
 	def __init__(self, file):
 		root = ElementTree.parse(file).getroot()
 		background = root.find('background')
 		self.height = int(background.attrib['height'])
 		self.width = int(background.attrib['width'])
-		entities = [str.strip() for str in background.text.split(',')]
+		
 		self.matrix = []
+		entities = [char.strip() for char in background.text.split(',')]
 		for i in range(self.height):
 			self.matrix.append(entities[i * self.width : (i + 1) * self.width])
+		
+		self.times = {}
+		for time in root.find('times').findall('time'):
+			self.times[Time(time.attrib['id'])] = time.text
+		
+		self.strings = {}
+		for string in root.find('strings').findall('string'):
+			self.strings[int(string.attrib['id'])] = string.text
 
 class Theme:
 	'''A theme has several elements that can be accessed through this class:
