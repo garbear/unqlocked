@@ -3,6 +3,8 @@
 		http://www.qlocktwo.com/downloads/ENGLISH/BlackIceTeam_Screen_EN.jpg
 	</preview>
 	<background>black</background>
-	<active>f8f4f1</active>
-	<inactive>5e5a57</inactive>
+	<!--<active>f8f4f1</active>-->
+	<!--<inactive>5e5a57</inactive>-->
+	<active>darkgrey</active>
+	<inactive>darkblue</inactive>
 </theme>

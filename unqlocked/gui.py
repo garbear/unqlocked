@@ -5,9 +5,11 @@ import xbmc, xbmcgui
 PROPERTY_ACTIVE = 'Unqlocked.%i.Highlight'
 PROPERTY_INACTIVE = 'Unqlocked.%i.Background'
 
-class Letter:
-	def __init__(self, letter, index):
-		self.letter = letter
+class Letter(object):
+	def __init__(self, index):
+		'''Initialize a letter object by its index. The value of the label is
+		set later by the UnqlockedWindow object. If the layout dimensions are
+		the same, it is technically possible to switch languages at runtime.'''
 		self.index = index
 	
 	def toXML(self):
@@ -24,7 +26,7 @@ class Letter:
 		# </item>
 		return item
 
-class Matrix:
+class Matrix(object):
 	def __init__(self, letters, layout, theme):
 		self.letters = letters
 		self.layout = layout
@@ -56,7 +58,7 @@ class Matrix:
 			SubElement(control, 'scrolltime').text = '-'
 			SubElement(control, 'hitrect', x=str(-10), y=str(-10), w=str(1), h=str(1))
 			# <itemlayout>
-			itemlayout = SubElement(control, 'itemlayout', height=str(self.height), width=str(self.width))
+			itemlayout = SubElement(control, 'itemlayout', height=str(self.letterHeight), width=str(self.letterWidth))
 			if True:
 				self.addItemLayout(itemlayout, self.theme.inactive, 'ListItem.Label')
 				self.addItemLayout(itemlayout, self.theme.active, 'ListItem.Label2')
@@ -93,17 +95,21 @@ class Matrix:
 		# </control>
 
 
-class Sprites:
-	def __init__(self, layout, theme, config):
+class Sprites(object):
+	def __init__(self, layout, theme):
+		self.layout = layout
+		self.theme = theme
+	
+	def toXML(self):
 		pass
 
 
-class Backgrounds:
+class Backgrounds(object):
 	def __init__(self, theme):
 		self.theme = theme
 	
 	# TODO: Don't hardcode width and height (and account for the offsets)
-	def toXML(self):
+	def toXMLArray(self):
 		'''Return an array of controls to be used as backgrounds'''
 		controls = []
 		# <control>
@@ -146,9 +152,9 @@ def indent(elem, level=0):
 		if level and (not elem.tail or not elem.tail.strip()):
 			elem.tail = i
 
-class Window:
+class Window(object):
 	def __init__(self, layout, theme):
-		self.letters = [Letter('A', 0), Letter('B', 1), Letter('C', 2)]
+		self.letters = [Letter(i) for i in range(layout.width * layout.height)]
 		self.layout = layout
 		self.theme = theme
 	
@@ -156,14 +162,15 @@ class Window:
 		# <window>
 		window = Element('window', id=str(WINDOW_ID))
 		if True:
+			# Fade in for 1.0 second
 			SubElement(window, 'animation', effect='fade', time=str(1000)).text = 'WindowOpen'
 			# <controls>
 			controls = SubElement(window, 'controls')
 			if True:
 				backgrounds = Backgrounds(self.theme)
-				for background in backgrounds.toXML():
+				for background in backgrounds.toXMLArray():
 					controls.append(background)
-				#sprites = Matrix(self.layout, self.theme, None)
+				#sprites = Sprites(self.layout, self.theme)
 				#controls.append(sprites.toXML())
 				matrix = Matrix(self.letters, self.layout, self.theme)
 				controls.append(matrix.toXML())
@@ -171,7 +178,7 @@ class Window:
 		# </window>
 		return window
 	
-	def toPrettyXML(self):
+	def toXMLPrettyPlease(self):
 		windowNode = self.toXML()
 		indent(windowNode)
 		return windowNode
