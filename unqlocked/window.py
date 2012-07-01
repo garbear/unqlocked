@@ -23,6 +23,9 @@ class UnqlockedWindow(xbmcgui.WindowXMLDialog):
 			for col in range(self.layout.width):
 				index = row * self.layout.width + col
 				WINDOW_HOME.setProperty(PROPERTY_INACTIVE % index, self.layout.matrix[row][col])
+		# Start with a state of uniform False
+		self.state = [[False for col in range(self.layout.width)] \
+				for row in range(self.layout.height)]
 	
 	def onAction(self, action):
 		actionID = action.getId()
@@ -33,10 +36,14 @@ class UnqlockedWindow(xbmcgui.WindowXMLDialog):
 		self.close()
 	
 	def drawMatrix(self, truthMatrix):
-		for i in range(self.layout.height * self.layout.width):
-			WINDOW_HOME.clearProperty(PROPERTY_ACTIVE % i)
 		for row in range(self.layout.height):
 			for col in range(self.layout.width):
-				if truthMatrix[row][col]:
-					index = row * self.layout.width + col
+				index = row * self.layout.width + col
+				if truthMatrix[row][col] and not self.state[row][col]:
 					WINDOW_HOME.setProperty(PROPERTY_ACTIVE % index, self.layout.matrix[row][col])
+				if not truthMatrix[row][col] and self.state[row][col]:
+					WINDOW_HOME.clearProperty(PROPERTY_ACTIVE % index)
+		self.state = truthMatrix
+	
+	def drawSprites(self, count):
+		pass
