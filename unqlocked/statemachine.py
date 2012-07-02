@@ -10,6 +10,10 @@ import datetime
 from copy import deepcopy
 
 class StateMachine(threading.Thread):
+	'''Representation of a state machine, where the state is defined by
+	a reference to an internal (fake) clock or an external (real) clock,
+	and the only transition between states occurs as a transition between
+	two different times.'''
 	def __init__(self, delay):
 		super(StateMachine, self).__init__()
 		self._stop = False

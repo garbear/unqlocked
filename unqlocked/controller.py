@@ -1,4 +1,4 @@
-import gui, monitor, solver, thread, window
+import gui, monitor, statemachine, solver, window
 from unqlocked import log, WINDOW_ID
 
 import os
@@ -60,8 +60,8 @@ class Master:
 		self.window.drawBackground()
 		
 		# Create the threads
-		self.qlockThread = thread.QlockThread(self.window, config.layout)
-		#self.spriteThread = thread.SpriteThread(self.window, config)
+		self.qlockThread = statemachine.QlockThread(self.window, config.layout)
+		#self.spriteThread = statemachine.SpriteThread(self.window, config)
 	
 	def spin(self):
 		self.qlockThread.start()
