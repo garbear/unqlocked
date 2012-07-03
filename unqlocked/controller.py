@@ -17,9 +17,13 @@ class Time(object):
 			self.minutes = int(parts[1]) if len(parts) >= 2 else 0
 			self.seconds = int(parts[2]) if len(parts) >= 3 else -1
 		self.secondsUsed = (self.seconds != -1)
+		# self.duration
+		# Optionally, add a duration post-instantation
+		# A duration is simply another Time object
 	
 	def __hash__(self):
-		return hash((self.hours, self.minutes, self.seconds))
+		#return hash((self.hours, self.minutes, self.seconds))
+		return self.toSeconds()
 	
 	def __eq__(self, other):
 		return (self.hours, self.minutes, self.seconds) == (other.hours, other.minutes, other.seconds)

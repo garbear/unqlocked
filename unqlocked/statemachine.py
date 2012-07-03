@@ -34,7 +34,7 @@ class StateMachine(threading.Thread):
 		while not self.shouldStop():
 			# Allow the subclass to update the GUI
 			log('StateMachine stepping')
-			time = controller.Time(1, 0)
+			time = controller.Time(1, 5)
 			self.step(time)
 			# Calculate when the next step should be
 			self.delay = 100.0
@@ -69,16 +69,22 @@ class QlockThread(StateMachine):
 		self.window = window
 		# Use a lowercase matrix for comparison
 		self.layout = deepcopy(layout)
+		# TODO: inline
 		for row in range(self.layout.height):
 			for col in range(self.layout.width):
 				self.layout.matrix[row][col] = self.layout.matrix[row][col].lower()
-		self.solver = solver.Solver(layout)
+		# Instantiate the solver
+		log('Creating the solver')
+		self.solver = solver.Solver(layout.times, layout.strings)
+		log('Solver created')
 	
 	def step(self, time):
 		# Initialize an empty matrix
 		truthMatrix = self.newTruthMatrix()
 		# Ask the solver for the time
-		solution = self.solver.getSolution(time)
+		log('Solving for the current time (%s)' % str(time))
+		solution = self.solver.resolveTime(time)
+		log('Solution: ' + str([str(s) for s in solution]))
 		# Highlight the solution
 		success = self.highlight(self.layout.matrix, truthMatrix, solution)
 		log('Highlight results: ' + str(success))
@@ -100,12 +106,17 @@ class QlockThread(StateMachine):
 		'''Highlight tokens in a row of chars (and each char is allowed to be
 		composed of more than one char, such as in o'clock). row is used to
 		keep track of the row in truthMatrix to highlight values on. The return
-		value is the number of tokens consumed.'''
+		value is the number of tokens consumed.
+		
+		Pay attention to the line: token = str(tokens[0]). This is where the
+		heavy lifting actually occurs.
+		'''
 		tokensCopy = tokens # Shallow copy (deep is done via slice later)
 		for i in range(len(charRow)):
 			if len(tokens) == 0:
 				break
-			token = tokens[0]
+			# Convert the token object (see solver.py) to a string
+			token = str(tokens[0])
 			if ''.join(charRow[i:]).startswith(token):
 				# Found a match
 				while len(token):
