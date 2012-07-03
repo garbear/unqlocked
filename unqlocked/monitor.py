@@ -6,3 +6,6 @@ class ExitMonitor(xbmc.Monitor):
 	
 	def onScreensaverDeactivated(self):
 		self.exit_callback()
+	
+	def onAbortRequested(self):
+		self.exit_callback()
