@@ -28,7 +28,7 @@
 		<time id="24:00">it is %0h% hours and %0m% minutes</time>
 	</times>
 	<strings>
-		<string id="0" desc="nulla">N</string>
+		<string id="0">N</string> <!-- Nulla -->
 		<string id="1">I</string>
 		<string id="2">II</string>
 		<string id="3">III</string>

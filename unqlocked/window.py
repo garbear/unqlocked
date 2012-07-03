@@ -1,4 +1,4 @@
-from unqlocked import log, WINDOW_ID
+from unqlocked import log, createTruthMatrix, WINDOW_ID
 import monitor
 import xbmcgui
 
@@ -24,8 +24,7 @@ class UnqlockedWindow(xbmcgui.WindowXMLDialog):
 				index = row * self.layout.width + col
 				WINDOW_HOME.setProperty(PROPERTY_INACTIVE % index, self.layout.matrix[row][col])
 		# Start with a state of uniform False
-		self.state = [[False for col in range(self.layout.width)] \
-				for row in range(self.layout.height)]
+		self.state = createTruthMatrix(self.layout.height, self.layout.width)
 	
 	def onAction(self, action):
 		actionID = action.getId()

@@ -1,6 +1,5 @@
-from unqlocked import log, WINDOW_ID
+from unqlocked import log, createTruthMatrix, gcd, WINDOW_ID, Time
 
-import controller # for Time
 import solver
 
 import xbmc
@@ -34,7 +33,7 @@ class StateMachine(threading.Thread):
 		while not self.shouldStop():
 			# Allow the subclass to update the GUI
 			log('StateMachine stepping')
-			time = controller.Time(1, 5)
+			time = Time(1, 45)
 			self.step(time)
 			# Calculate when the next step should be
 			self.delay = 100.0
@@ -80,11 +79,11 @@ class QlockThread(StateMachine):
 	
 	def step(self, time):
 		# Initialize an empty matrix
-		truthMatrix = self.newTruthMatrix()
+		truthMatrix = createTruthMatrix(self.layout.height, self.layout.width)
 		# Ask the solver for the time
 		log('Solving for the current time (%s)' % str(time))
 		solution = self.solver.resolveTime(time)
-		log('Solution: ' + str([str(s) for s in solution]))
+		log('Solution: ' + str(solution))
 		# Highlight the solution
 		success = self.highlight(self.layout.matrix, truthMatrix, solution)
 		log('Highlight results: ' + str(success))
@@ -106,17 +105,12 @@ class QlockThread(StateMachine):
 		'''Highlight tokens in a row of chars (and each char is allowed to be
 		composed of more than one char, such as in o'clock). row is used to
 		keep track of the row in truthMatrix to highlight values on. The return
-		value is the number of tokens consumed.
-		
-		Pay attention to the line: token = str(tokens[0]). This is where the
-		heavy lifting actually occurs.
-		'''
+		value is the number of tokens consumed.'''
 		tokensCopy = tokens # Shallow copy (deep is done via slice later)
 		for i in range(len(charRow)):
 			if len(tokens) == 0:
 				break
-			# Convert the token object (see solver.py) to a string
-			token = str(tokens[0])
+			token = tokens[0]
 			if ''.join(charRow[i:]).startswith(token):
 				# Found a match
 				while len(token):
@@ -131,21 +125,14 @@ class QlockThread(StateMachine):
 	
 	def cleanup(self):
 		'''Clear window properties'''
-		truthMatrix = self.newTruthMatrix()
+		truthMatrix = createTruthMatrix(self.layout.height, self.layout.width)
 		self.window.drawMatrix(truthMatrix)
 		pass
 	
 	def calcDelay(self, layout):
 		'''The delay is calculated from the GCD of every time entry.'''
 		return reduce(gcd, [time.toSeconds() for time in layout.times.keys()])
-	
-	def newTruthMatrix(self):
-		return [[False for col in range(self.layout.width)] \
-				for row in range(self.layout.height)]
 
-
-def gcd(a, b):
-	return a if not b else gcd(b, a % b)
 
 
 class SpriteThread(StateMachine):

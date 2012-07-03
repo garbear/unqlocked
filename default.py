@@ -13,7 +13,7 @@
 # *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 # *  http://www.gnu.org/copyleft/gpl.html
 
-from unqlocked import log, WINDOW_ID
+from unqlocked import log, WINDOW_ID, Time
 import unqlocked.controller
 
 import os
@@ -52,11 +52,16 @@ class Layout:
 		
 		self.times = {}
 		for time in root.find('times').findall('time'):
-			self.times[unqlocked.controller.Time(time.attrib['id'])] = time.text
+			key = unqlocked.controller.Time(time.attrib['id'])
+			# If set, store the duration with the key
+			if 'duration' in time.attrib:
+				key.duration = Time(time.attrib['duration'])
+			self.times[key] = time.text.lower()
+			#log('Layout.__init__: found time %s: %s' % (str(key), self.times[key]))
 		
 		self.strings = {}
 		for string in root.find('strings').findall('string'):
-			self.strings[int(string.attrib['id'])] = string.text
+			self.strings[int(string.attrib['id'])] = string.text.lower()
 
 class Theme:
 	'''A theme has several elements that can be accessed through this class:
