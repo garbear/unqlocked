@@ -16,7 +16,7 @@
 from unqlocked import log, WINDOW_ID, Time
 import unqlocked.controller
 
-import os
+import os, sys
 import xbmc
 import xbmcaddon
 import elementtree.ElementTree as ElementTree
@@ -40,27 +40,65 @@ class Config:
 
 class Layout:
 	def __init__(self, file):
-		root = ElementTree.parse(file).getroot()
-		background = root.find('background')
-		self.height = int(background.attrib['height'])
-		self.width = int(background.attrib['width'])
+		log('Using layout: ' + os.path.basename(file))
+		try:
+			root = ElementTree.parse(file).getroot()
+		except:
+			log('Error parsing layout file!')
+			raise # Let the user see the error
+		try:
+			background = root.find('background')
+			self.height = int(background.attrib['height'])
+			self.width = int(background.attrib['width'])
+		except:
+			log('Error: <background> tag missing/incorrect!')
+			sys.exit()
 		
 		self.matrix = []
-		entities = [char.strip() for char in background.text.split(',')]
+		entities = [char.strip().upper() for char in background.text.split(',')]
+		if (self.height * self.width > len(entities)):
+			log('Error: Too many characters in background (expecting %d, found %d)' % \
+				(self.height * self.width, len(entities)))
+			sys.exit()
+		elif (self.height * self.width < len(entities)):
+			log('Error: Too few characters in background (expecting %d, found %d)' % \
+				(self.height * self.width, len(entities)))
+			sys.exit()
 		for i in range(self.height):
 			self.matrix.append(entities[i * self.width : (i + 1) * self.width])
 		
+		timesNode = root.find('times')
+		if timesNode == None:
+			log('Error: <times> node not found!')
+			sys.exit()
+		if 'use24' in timesNode.attrib and timesNode.attrib['use24'] == 'true':
+			self.use24 = True
+		else:
+			self.use24 = False
+		
 		self.times = {}
-		for time in root.find('times').findall('time'):
+		for time in timesNode.findall('time'):
+			if 'id' not in time.attrib:
+				log('Warning: found <time> tag with no "id" attribute')
+				continue
 			key = unqlocked.controller.Time(time.attrib['id'])
 			# If set, store the duration with the key
 			if 'duration' in time.attrib:
 				key.duration = Time(time.attrib['duration'])
 			self.times[key] = time.text.lower()
-			#log('Layout.__init__: found time %s: %s' % (str(key), self.times[key]))
+		if len(self.times) == 0:
+			log('Error: no <time> tags found!')
+			sys.exit()
 		
 		self.strings = {}
-		for string in root.find('strings').findall('string'):
+		stringsNode = root.find('strings')
+		if stringsNode == None:
+			log('Error: <strings> node not found!')
+			sys.exit()
+		for string in stringsNode.findall('string'):
+			if 'id' not in string.attrib:
+				log('Warning: found <string> tag with no "id" attribute')
+				continue
 			self.strings[int(string.attrib['id'])] = string.text.lower()
 
 class Theme:
@@ -70,11 +108,18 @@ class Theme:
 	* self.inactive   - The color of disabled tiles
 	'''
 	def __init__(self, file):
-		root = ElementTree.parse(file).getroot()
-		self.background = root.find('background').text
-		self.active = root.find('active').text
-		self.inactive = root.find('inactive').text
-
+		log('Using theme: ' + os.path.basename(file))
+		try:
+			root = ElementTree.parse(file).getroot()
+		except:
+			log('Error parsing theme file!')
+			raise # Let the user see the error
+		try:
+			self.background = root.find('background').text
+			self.active = root.find('active').text
+			self.inactive = root.find('inactive').text
+		except:
+			log('Error parsing theme file!')
 
 config = Config()
 
