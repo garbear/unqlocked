@@ -33,7 +33,7 @@ class StateMachine(threading.Thread):
 		while not self.shouldStop():
 			# Allow the subclass to update the GUI
 			log('StateMachine stepping')
-			time = Time(1, 45)
+			time = Time(2, 30)
 			self.step(time)
 			# Calculate when the next step should be
 			self.delay = 100.0
@@ -74,40 +74,55 @@ class QlockThread(StateMachine):
 				self.layout.matrix[row][col] = self.layout.matrix[row][col].lower()
 		# Instantiate the solver
 		log('Creating the solver')
-		self.solver = solver.Solver(layout.times, layout.strings)
+		self.solver = solver.Solver(layout.times, layout.use24, layout.strings)
 		log('Solver created')
 	
 	def step(self, time):
-		# Initialize an empty matrix
-		truthMatrix = createTruthMatrix(self.layout.height, self.layout.width)
 		# Ask the solver for the time
 		log('Solving for the current time (%s)' % str(time))
 		solution = self.solver.resolveTime(time)
 		log('Solution: ' + str(solution))
-		# Highlight the solution
+		truthMatrix = createTruthMatrix(self.layout.height, self.layout.width)
 		success = self.highlight(self.layout.matrix, truthMatrix, solution)
-		log('Highlight results: ' + str(success))
+		if not success:
+			log('Unable to highlight solution. Reattempting with no spaces between words')
+			truthMatrix = createTruthMatrix(self.layout.height, self.layout.width)
+			success = self.highlight(self.layout.matrix, truthMatrix, solution, False)
+			if success:
+				log('Success')
+			else:
+				log('Failed to highlight solution again. Drawing best attempt')
 		# Draw the result
 		self.window.drawMatrix(truthMatrix)
 	
-	def highlight(self, charMatrix, truthMatrix, tokens):
+	def highlight(self, charMatrix, truthMatrix, tokens, forceSpace = True):
 		'''Highlight tokens in truthMatrix as they are found in charMatrix.
 		This function returns True if all tokens are highlighted sucessfully,
 		and False otherwise.'''
 		for row in range(self.layout.height):
 			if not len(tokens):
 				break
-			consumed = self.highlightRow(charMatrix[row], row, truthMatrix, tokens)
+			consumed = self.highlightRow(charMatrix[row], row, truthMatrix, tokens, forceSpace)
 			tokens = tokens[consumed:]
 		return len(tokens) == 0
 	
-	def highlightRow(self, charRow, row, truthMatrix, tokens):
+	def highlightRow(self, charRow, row, truthMatrix, tokens, forceSpace = True):
 		'''Highlight tokens in a row of chars (and each char is allowed to be
 		composed of more than one char, such as in o'clock). row is used to
 		keep track of the row in truthMatrix to highlight values on. The return
-		value is the number of tokens consumed.'''
+		value is the number of tokens consumed.
+		
+		forceSpace parameter:
+		If True, this won't allow consecutive tokens to be highlighted
+		Ex: charRow = ['a','h','a','l','f'], tokens = ['a', 'half']
+		Given charRow and tokens, only the letter 'a' will be highlighted
+		becase no space occurs after the first word'''
 		tokensCopy = tokens # Shallow copy (deep is done via slice later)
-		for i in range(len(charRow)):
+		# Use a while loop, because looping over a range doesn't let you
+		# arbitrarily increment the loop counter
+		i = 0
+		while i < len(charRow):
+			# No tokens means we're all done
 			if len(tokens) == 0:
 				break
 			token = tokens[0]
@@ -119,8 +134,16 @@ class QlockThread(StateMachine):
 					# than a single char (such as the o' in o'clock)
 					token = token[len(charRow[i]):]
 					i = i + 1
+				# If forceSpace is False, we need to allow consecutive words.
+				# i was set to the end of the token, but we increment i as part
+				# of the while loop, so the end result is that consecutive words
+				# are automatically avoided. To reverse this, decrement i to
+				# cancel out the while loop's increment
+				if not forceSpace:
+					i = i - 1
 				# Elements have been highlighted, move on to the next token
 				tokens = tokens[1:]
+			i = i + 1 # Move on to the next token
 		return len(tokensCopy) - len(tokens)
 	
 	def cleanup(self):
