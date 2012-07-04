@@ -8,7 +8,7 @@
 		H,U,I,T,N,E,U,F,D,I,X,
 		O,N,Z,E,R,H,E,U,R,E,S,
 		M,O,I,N,S,O,L,E,D,I,X,
-		E,T,X,B,M,C,Q,U,A,R,T
+		E,T,X,B,M,C,Q,U,A,R,T,
 		V,I,N,G,T,-,C,I,N,Q,U,
 		E,T,S,D,E,M,I,E,P,A,N
 	</background>
@@ -32,7 +32,7 @@
 	</times>
 	<strings>
 		<string id="1">une</string>
-		<string id="2">duex</string>
+		<string id="2">deux</string>
 		<string id="3">trois</string>
 		<string id="4">quatre</string>
 		<string id="5">cinq</string>
