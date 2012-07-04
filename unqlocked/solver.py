@@ -96,18 +96,19 @@ class RuleChain(object):
 			self.rules[i] = self.insert(self.rules[i], rule, timeObject, i)
 	
 	def insert(self, node, rule, time, i):
+		a = 3
 		if node == None:
 			# Base case: create a new node
-			if (i == 1): log('Base case: new node (%d)' % len(rule))
+			if (i == a): log('Base case: new node (%d)' % len(rule))
 			return RuleNode(rule, time)
 		
 		if time.minutes == node.time.minutes and time.seconds == node.time.seconds:
 			# Same time, only replace if hour is greater
 			if time.hour >= node.time.hour:
-				if (i == 1): log('Same time: replacing node (%d)' % len(node.rule))
+				if (i == a): log('Same time: replacing node (%d)' % len(node.rule))
 				return RuleNode(rule, time, node.next)
 			# Otherwise, ignore it
-			if (i == 1): log('Same time: ignoring rule (%d)' % len(rule))
+			if (i == a): log('Same time: ignoring rule (%d)' % len(rule))
 			return node
 		
 		# Assume the same hour as the node so comparisons will work
@@ -115,21 +116,21 @@ class RuleChain(object):
 		
 		# If it occurs before this node, simply prepend it to the chain
 		if tempTime.toSeconds() < node.time.toSeconds():
-			if (i == 1): log('Time occurs earlier, prepending rule')
+			if (i == a): log('Time occurs earlier, prepending rule in front of (%d)' % len(node.rule))
 			return Node(rule, time, node)
 		
 		# Represent node.next.time in terms of time's hours
 		if node.next != None:
-			tempTimeNext = Time(time.hours, node.next.time.minutes, node.next.time.seconds)
+			tempTime = Time(node.next.time.hours, time.minutes, time.seconds)
 		
 		# If no next node, or it doesn't occur before the next node, recurse deeper
-		if node.next == None or tempTime.toSeconds() > tempTimeNext.toSeconds():
-			if (i == 1): log('Recursing deeper (leaving %d)' % len(node.rule))
+		if node.next == None or tempTime.toSeconds() >= node.next.time.toSeconds():
+			if (i == a): log('Recursing deeper (leaving %d)' % len(node.rule))
 			node.next = self.insert(node.next, rule, time, i)
 			return node
 		
 		# Time occurs between node.time and node.next.time, perform the linking
-		if (i == 1): log('Base case: linking in new node')
+		if (i == a): log('Base case: linking in new node after (%d)' % len(node.rule))
 		node.next = RuleNode(rule, time, node.next)
 		return node
 	
