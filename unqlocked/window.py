@@ -29,7 +29,7 @@ class UnqlockedWindow(xbmcgui.WindowXMLDialog):
 	def onAction(self, action):
 		actionID = action.getId()
 		if (actionID in (ACTION_PREVIOUS_MENU, ACTION_NAV_BACK, ACTION_PARENT_DIR)):
-			self.close()
+			self.exit()
 	
 	def exit(self):
 		self.close()

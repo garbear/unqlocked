@@ -145,11 +145,11 @@ class Matrix(object):
 				# Categories generated. Prefer unstyled fonts
 				if len(fontsWithoutStyle):
 					max = sorted(fontsWithoutStyle.keys(), reverse=True)[0]
-					log('Using unstyled font %s (%dpt)' % (fontsWithoutStyle[max], max))
+					log('Using unstyled font "%s" (%dpt)' % (fontsWithoutStyle[max], max))
 					return fontsWithoutStyle[max]
 				elif len(fontsWithStyle):
 					max = sorted(fontsWithStyle.keys(), reverse=True)[0]
-					log('Using styled font %s (%dpt)' % (fontsWithStyle[max], max))
+					log('Using styled font "%s" (%dpt)' % (fontsWithStyle[max], max))
 					return fontsWithStyle[max]
 				log('No suitable fonts found. Falling back to ' + fallback)
 				return fallback

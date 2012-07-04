@@ -11,13 +11,15 @@
 		N,V,I,I,M,I,N,U,T,E,S
 	</background>
 	<times>
+		<time id="0:00">it is %0h% hours and %0m% minutes</time>
+		<time id="0:01">it is %0h% hours and %1m% minute</time>
+		<time id="0:02">it is %0h% hours and %2m% minutes</time>
 		<time id="1:00">it is %1h% hour and %0m% minutes</time>
 		<time id="1:01">it is %1h% hour and %1m% minute</time>
 		<time id="1:02">it is %1h% hour and %2m% minutes</time>
 		<time id="2:00">it is %2h% hours and %0m% minutes</time>
 		<time id="2:01">it is %2h% hours and %1m% minute</time>
 		<time id="2:02">it is %2h% hours and %2m% minutes</time>
-		<time id="24:00">it is %0h% hours and %0m% minutes</time>
 	</times>
 	<strings>
 		<string id="0">N</string>
