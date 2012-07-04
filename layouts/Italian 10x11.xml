@@ -10,9 +10,10 @@
 		C,I,N,Q,U,E,S,M,E,N,O,
 		E,C,U,N,O,Q,U,A,R,T,O,
 		V,E,N,T,I,C,I,N,Q,U,E,
-		D,I,E,C,I,E,M,E,Z,Z,A
+		D,I,E,C,I,E,M,E,Z,Z,O
 	</background>
 	<times>
+		<time id="12:05">sono le %12h% e %5m%</time>
 		<time id="12:35">é l'%1h% meno %25m%</time>
 		<time id="1:00">é l'%1h%</time>
 		<time id="1:05">é l'%1h% e %5m%</time>
