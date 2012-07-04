@@ -21,15 +21,14 @@ class Symbol(Token):
 	self.transform - lambda function that determines the actual number of this symbol
 	self.stringTable - dictionary for the final conversion of number to string
 	self.timeSource - when converted to a string, this is used as the current time
-	self.use24 - whether we should wrap around at 12 or 24 hours
-	self.use0 - if the clock system's hours start at zero or 1
+	
+	Two other properties are passed as parameters (and rolled into the lambda function):
+	use24 - whether we should wrap around at 12 or 24 hours
+	use0 - if the clock system's hours start at zero or 1
 	
 	To update this symbol to the current time, it is sufficient to change
 	the timeSource reference and convert to a string again.'''
 	def __init__(self, symbol, time, stringTable, timeSource, use24, use0):
-		#self.use24 = use24
-		#self.use0 = use0
-		
 		# Unit comes before the last %
 		self.unit = symbol[-2]
 		
@@ -43,11 +42,12 @@ class Symbol(Token):
 			else:
 				self.transform = lambda x: (x + metric - ref - 1) % (24 if use24 else 12) + 1
 		else:
-			# Check to see if we're counting down
+			# If minutes > 30 and the symbol has a number < 30, then assume it's
+			# counting down. Example: <time id="1:35">it is %25m% to %2h%</time>
 			if not (ref > 30 and metric < 30):
-				self.transform = lambda x: (x + metric - ref) % 60 # Counts up
+				self.transform = lambda x: (x + metric - ref) % 60 # Counting up
 			else:
-				self.transform = lambda x: -(x - metric - ref) % 60 # Counts down
+				self.transform = lambda x: -(x - metric - ref) % 60 # Counting down
 		
 		self.stringTable = stringTable
 		self.timeSource = timeSource
@@ -70,6 +70,7 @@ class RuleNode(object):
 		self.rule = rule
 		self.time = time
 		self.next = next
+
 
 class RuleChain(object):
 	def __init__(self, strings, timeSource, use24, use0):
@@ -96,7 +97,7 @@ class RuleChain(object):
 			self.rules[i] = self.insert(self.rules[i], rule, timeObject, i)
 	
 	def insert(self, node, rule, time, i):
-		a = 3
+		a = 1
 		if node == None:
 			# Base case: create a new node
 			if (i == a): log('Base case: new node (%d)' % len(rule))
