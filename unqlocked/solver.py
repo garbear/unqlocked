@@ -66,11 +66,10 @@ class Symbol(Token):
 
 
 class RuleNode(object):
-	def __init__(self, rule):
+	def __init__(self, rule, time, next = None):
 		self.rule = rule
-		self.time = None
-		self.nextTick = None
-		self.nextHour = None
+		self.time = time
+		self.next = next
 
 class RuleChain(object):
 	def __init__(self, strings, timeSource, use24, use0):
@@ -78,15 +77,61 @@ class RuleChain(object):
 		self.timeSource = timeSource
 		self.use24 = use24
 		self.use0 = use0
-		#self.rules = None
-		self.rules = []
+		self.rules = [None for i in range(24 if self.use24 else 12)]
 	
 	def add(self, timeObject, timeString):
+		log('Adding rule %s: %s' % (str(timeObject), timeString))
+		# Wrap around for below (rule creation doesn't care)
+		timeObject.hours = timeObject.hours % (24 if self.use24 else 12)
 		rule = [self.createToken(word, timeObject) for word in timeString.split(' ')]
+		# Contains no symbols, only constants - only add rule for its hour
+		isConst = ([isinstance(token, Constant) for token in rule].count(False) == 0)
 		
-		node = RuleNode(rule)
+		#log('isConst: ' + str(isConst))
 		
-		self.rules.append(rule)
+		for i in range(len(self.rules)):
+			if isConst and i != timeObject.hours:
+				continue
+			log('Creating rule for hour %d' % i)
+			self.rules[i] = self.insert(self.rules[i], rule, timeObject, i)
+	
+	def insert(self, node, rule, time, i):
+		if node == None:
+			# Base case: create a new node
+			if (i == 1): log('Base case: new node (%d)' % len(rule))
+			return RuleNode(rule, time)
+		
+		if time.minutes == node.time.minutes and time.seconds == node.time.seconds:
+			# Same time, only replace if hour is greater
+			if time.hour >= node.time.hour:
+				if (i == 1): log('Same time: replacing node (%d)' % len(node.rule))
+				return RuleNode(rule, time, node.next)
+			# Otherwise, ignore it
+			if (i == 1): log('Same time: ignoring rule (%d)' % len(rule))
+			return node
+		
+		# Assume the same hour as the node so comparisons will work
+		tempTime = Time(node.time.hours, time.minutes, time.seconds)
+		
+		# If it occurs before this node, simply prepend it to the chain
+		if tempTime.toSeconds() < node.time.toSeconds():
+			if (i == 1): log('Time occurs earlier, prepending rule')
+			return Node(rule, time, node)
+		
+		# Represent node.next.time in terms of time's hours
+		if node.next != None:
+			tempTimeNext = Time(time.hours, node.next.time.minutes, node.next.time.seconds)
+		
+		# If no next node, or it doesn't occur before the next node, recurse deeper
+		if node.next == None or tempTime.toSeconds() > tempTimeNext.toSeconds():
+			if (i == 1): log('Recursing deeper (leaving %d)' % len(node.rule))
+			node.next = self.insert(node.next, rule, time, i)
+			return node
+		
+		# Time occurs between node.time and node.next.time, perform the linking
+		if (i == 1): log('Base case: linking in new node')
+		node.next = RuleNode(rule, time, node.next)
+		return node
 	
 	def createToken(self, token, time):
 		'''Translate a string into a Constant or a Symbol. Returns a Token
@@ -111,14 +156,45 @@ class RuleChain(object):
 		return False
 	
 	def lookup(self, time):
-		rule = self.rules[0]
+		log('Looking up rule for %s' % str(time))
+		ruleChain = self.rules[time.hours % (24 if self.use24 else 12)]
 		tokens = []
-		for token in rule:
+		for token in self.lookupRecursive(ruleChain, time):
 			s = str(token)
 			# Need to split up multi-word tokens (in case a <string> entry
 			# includes a space)
 			tokens.extend(s.split(' ') if ' ' in s else [s])
 		return tokens
+	
+	def lookupRecursive(self, node, time):
+		if node == None:
+			log('ERROR: No node, returning []')
+			return []
+		log('Testing node (%d)' % len(node.rule))
+		
+		# Same as insert(), mimic the node's hours to use comparison operators
+		tempTime = Time(node.time.hours, time.minutes, time.seconds)
+		if tempTime.toSeconds() <= node.time.toSeconds():
+			log('Returning (%d): %s <= %s' % (len(node.rule), str(tempTime), str(node.time)))
+			return node.rule
+		
+		log('Continuing: %s > %s' % (str(tempTime), str(node.time)))
+		log('Continuing: %d > %d' % (tempTime.toSeconds(), node.time.toSeconds()))
+		
+		if node.next == None:
+			log('Base case: Next node is null, returning this one (%d)' % len(node.rule))
+			return node.rule
+		
+		# Same as insert(), mimic the next node's hours to use comparison operators
+		tempTime = Time(node.next.time.hours, time.minutes, time.seconds)
+		log('My time: ' + str(tempTime) + ', Next node time: ' + str(node.next.time))
+		if tempTime.toSeconds() < node.next.time.toSeconds():
+			log('Base case: Next node in the future, returning this one (%d)' % len(node.rule))
+			return node.rule
+		
+		# Our time comes after the next node, so continue the lookup from the next node
+		log('Searching deeper (%d)' % len(node.rule))
+		return self.lookupRecursive(node.next, time)
 
 
 class Solver(object):
