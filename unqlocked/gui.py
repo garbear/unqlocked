@@ -1,9 +1,13 @@
 from unqlocked import log, WINDOW_ID
-from elementtree.ElementTree import Element, SubElement
-import xbmc, xbmcgui
+import xbmc
+from elementtree.ElementTree import Element, SubElement, parse
+import os
 
 PROPERTY_ACTIVE = 'Unqlocked.%i.Highlight'
 PROPERTY_INACTIVE = 'Unqlocked.%i.Background'
+
+WIDTH = 420
+HEIGHT = 420
 
 class Letter(object):
 	def __init__(self, index):
@@ -32,13 +36,16 @@ class Matrix(object):
 		self.layout = layout
 		self.theme = theme
 		
-		self.posx = 455 # 27 + 428
-		self.posy = 185 # 20 + 165
-		self.width = 385
-		self.height = 350
+		self.posx = (1280 - WIDTH) / 2
+		self.posy = (720 - HEIGHT) / 2
+		self.width = WIDTH
+		self.height = HEIGHT
 		
-		self.letterHeight = 35
-		self.letterWidth = 35
+		self.letterHeight = HEIGHT / layout.height
+		self.letterWidth = WIDTH / layout.width
+		
+		# Generate front name here because addItemLayout() gets called twice
+		self.font = self.getFont()
 	
 	def toXML(self):
 		'''Generate the xml representation of the letter matrix'''
@@ -85,7 +92,7 @@ class Matrix(object):
 			SubElement(subControl, 'posy').text = str(0)
 			SubElement(subControl, 'width').text = str(self.letterWidth)
 			SubElement(subControl, 'height').text = str(self.letterHeight)
-			SubElement(subControl, 'font').text = 'font-22' # or use self.theme.font
+			SubElement(subControl, 'font').text = self.font
 			SubElement(subControl, 'textcolor').text = color
 			SubElement(subControl, 'selectedcolor').text = color
 			SubElement(subControl, 'align').text = 'center'
@@ -93,6 +100,63 @@ class Matrix(object):
 			# <label>[B]$INFO[ListItem.Label][/B]</label>
 			SubElement(subControl, 'label').text = '[B]$INFO[%s][/B]' % infolabel
 		# </control>
+	
+	def getFont(self):
+		'''Parse the current skin's Font.xml file for a list of font names by
+		size'''
+		log('Loading font set from current skin (%s)' % xbmc.getSkinDir())
+		
+		fontName = ''
+		# Use letterHeight (reasoning: WIDTH may be elastic in the future)
+		desiredSize = self.letterHeight * 1 / 2 # Decent ratio
+		fallback = 'font'
+		
+		# Font.xml can be in any resolution folder, keep trying until we find
+		# one. Use the first Font.xml we come across.
+		skinDir = xbmc.translatePath("special://skin/")
+		for item in os.listdir(skinDir):
+			fontFile = os.path.join(skinDir, item, 'Font.xml')
+			if not os.path.exists(fontFile):
+				continue
+			try:
+				root = parse(fontFile).getroot()
+			except:
+				continue
+			for set in root.findall('fontset'):
+				# Now that we've found the file, use the Default fontset
+				# (guaranteed to exist regardless of skin)
+				if 'id' not in set.attrib or set.attrib['id'] != 'Default':
+					continue
+				log('Font set loaded. Searching for a font smaller than %dpt' % desiredSize)
+				# Index the discovered fonts into two categories
+				fontsWithoutStyle = {}
+				fontsWithStyle = {}
+				for font in set.findall('font'):
+					if font.find('size') == None or font.find('name') == None:
+						continue
+					size = int(font.find('size').text)
+					# Skip fonts larger than the desired size
+					if size > desiredSize:
+						continue
+					if not font.find('style'):
+						fontsWithoutStyle[size] = font.find('name').text
+					else:
+						fontsWithStyle[size] = font.find('name').text
+				# Categories generated. Prefer unstyled fonts
+				if len(fontsWithoutStyle):
+					max = sorted(fontsWithoutStyle.keys(), reverse=True)[0]
+					log('Using unstyled font %s (%dpt)' % (fontsWithoutStyle[max], max))
+					return fontsWithoutStyle[max]
+				elif len(fontsWithStyle):
+					max = sorted(fontsWithStyle.keys(), reverse=True)[0]
+					log('Using styled font %s (%dpt)' % (fontsWithStyle[max], max))
+					return fontsWithStyle[max]
+				log('No suitable fonts found. Falling back to ' + fallback)
+				return fallback
+			log('Default font set not found. Falling back to ' + fallback)
+			return fallback
+		log('Font.xml not found. Falling back to ' + fallback)
+		return fallback
 
 
 class Sprites(object):
@@ -119,10 +183,13 @@ class Backgrounds(object):
 			SubElement(control, 'posy').text = str(0)
 			SubElement(control, 'width').text = str(1280)
 			SubElement(control, 'height').text = str(720)
-			SubElement(control, 'colordiffuse').text = 'DDFFFFFF' # AARRGGBB
+			SubElement(control, 'colordiffuse').text = 'FFFFFFFF' # AARRGGBB
 			SubElement(control, 'texture').text = 'unqlocked-1px-black.png'
 		# </control>
 		controls.append(control)
+		
+		return controls
+		
 		# <control>
 		control = Element('control', type='image')
 		if True:
