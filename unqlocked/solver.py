@@ -11,7 +11,7 @@ class Constant(Token):
 	def __init__(self, name):
 		self.name = name
 	
-	def __str__(self):
+	def __unicode__(self):
 		return self.name
 
 
@@ -52,7 +52,7 @@ class Symbol(Token):
 		self.stringTable = stringTable
 		self.timeSource = timeSource
 	
-	def __str__(self):
+	def __unicode__(self):
 		'''Convert the symbol to a string. If the stringTable entry for the
 		calculated number has a space, then the returned value will also have
 		a space and will need to be split.'''
@@ -63,6 +63,16 @@ class Symbol(Token):
 		elif self.unit == 's':
 			id = self.transform(self.timeSource.seconds)
 		return self.stringTable[id]
+
+
+class Compound(Token):
+	'''A compound token is a single word consisting of both symbols and plain
+	characters.'''
+	def __init__(self, parts):
+		self.parts = parts
+	
+	def __unicode__(self):
+		return u''.join([unicode(part) for part in self.parts])
 
 
 class RuleNode(object):
@@ -81,7 +91,7 @@ class RuleChain(object):
 		self.rules = [None for i in range(24 if self.use24 else 12)]
 	
 	def add(self, timeObject, timeString):
-		log('Adding rule %s: %s' % (str(timeObject), timeString))
+		#log('Adding rule %s: %s' % (str(timeObject), timeString))
 		# Wrap around for below (rule creation doesn't care)
 		timeObject.hours = timeObject.hours % (24 if self.use24 else 12)
 		rule = [self.createToken(word, timeObject) for word in timeString.split(' ')]
@@ -119,7 +129,7 @@ class RuleChain(object):
 		# If it occurs before this node, simply prepend it to the chain
 		if tempTime.toSeconds() < node.time.toSeconds():
 			if (i <= a): log('Time occurs earlier, prepending rule in front of (%d)' % len(node.rule))
-			return Node(rule, time, node)
+			return RuleNode(rule, time, node)
 		
 		# Represent node.next.time in terms of time's hours
 		if node.next != None:
@@ -141,28 +151,72 @@ class RuleChain(object):
 		object.'''
 		if self.isSymbol(token):
 			return Symbol(token, time, self.strings, self.timeSource, self.use24, self.use0)
+		elif self.isCompound(token):
+			log('Found compound token: ' + token)
+			log('Split into parts: ' + str(self.getParts(token)))
+			parts = [self.createToken(part, time) for part in self.getParts(token)]
+			return Compound(parts)
 		else:
 			return Constant(token)
-	
+
 	def isSymbol(self, test):
 		'''A symbol looks like %1h%'''
 		if len(test) >= 4 and test[0] == '%' and test[-1] == '%':
 			# Unit is the last-but-one char
 			unit = test[-2]
-			# Bypass % and unit
-			metric = int(test[1:-2])
+			try:
+				# Bypass % and unit
+				metric = int(test[1:-2])
+			except:
+				return False
 			if unit == 'h':
 				return 0 <= metric and metric <= 24 # include 24
 			elif unit == 'm' or unit == 's':
-				return -60 <= metric and metric <= 60 # include 60
+				return 0 <= metric and metric <= 60 # include 60
 		return False
+	
+	def isCompound(self, test):
+		'''A compound token contains symbols surrounded by other chars. This is
+		a pretty naive algorithm; symbols are 4 or 5 tokens, so just test every
+		4 and 5 token combination in the string for token-ness. If a symbol is
+		passed to this function, it will return true, so test for symbol-ness
+		before caling isCompound().'''
+		if len(test) <= 4:
+			return False
+		for i in range(len(test) - 3):
+			if test[i] == '%' and (self.isSymbol(test[i : i + 4]) or \
+						i + 4 < len(test) and self.isSymbol(test[i : i + 5])):
+				return True
+		return False
+	
+	def getParts(self, compound):
+		'''Break a compound token into an array of Constants and Symbols.
+		Each part returned is guaranteed to not be a Compound itself.'''
+		parts = []
+		i = 0
+		while i < len(compound):
+			if compound[i] == '%':
+				is4chars = i + 4 <= len(compound) and self.isSymbol(compound[i : i + 4])
+				is5chars = i + 5 <= len(compound) and self.isSymbol(compound[i : i + 5])
+				if is4chars or is5chars:
+					symbolSize = 4 if is4chars else 5
+					if i > 0:
+						parts.append(compound[:i])
+					parts.append(compound[i : i + symbolSize])
+					compound = compound[i + symbolSize : ]
+					i = 0
+					continue
+			i = i + 1
+		if i > 0:
+			parts.append(compound[:])
+		return parts
 	
 	def lookup(self, time):
 		log('Looking up rule for %s' % str(time))
 		ruleChain = self.rules[time.hours % (24 if self.use24 else 12)]
 		tokens = []
 		for token in self.lookupRecursive(ruleChain, time):
-			s = str(token)
+			s = unicode(token)
 			# Need to split up multi-word tokens (in case a <string> entry
 			# includes a space)
 			tokens.extend(s.split(' ') if ' ' in s else [s])
