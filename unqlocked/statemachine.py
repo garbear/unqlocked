@@ -33,7 +33,7 @@ class StateMachine(threading.Thread):
 		while not self.shouldStop():
 			# Allow the subclass to update the GUI
 			log('StateMachine stepping')
-			time = Time(2, 30)
+			time = Time(-1, 1)
 			self.step(time)
 			# Calculate when the next step should be
 			self.delay = 100.0
@@ -81,7 +81,8 @@ class QlockThread(StateMachine):
 		# Ask the solver for the time
 		log('Solving for the current time (%s)' % str(time))
 		solution = self.solver.resolveTime(time)
-		log('Solution: ' + str(solution))
+		solutionUTF8 = [uni.encode('utf-8') for uni in solution]
+		log('Solution: ' + str(solutionUTF8))
 		truthMatrix = createTruthMatrix(self.layout.height, self.layout.width)
 		success = self.highlight(self.layout.matrix, truthMatrix, solution)
 		if not success:

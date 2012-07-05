@@ -7,7 +7,7 @@ import xbmc
 WINDOW_ID = 3000
 
 def log(msg):
-	xbmc.log("UNQLOCKED: " + str(msg), level=xbmc.LOGDEBUG)
+	xbmc.log('UNQLOCKED: ' + msg, level=xbmc.LOGDEBUG)
 
 def createTruthMatrix(height, width):
 	return [[False for col in range(width)] for row in range(height)]

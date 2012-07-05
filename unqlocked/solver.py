@@ -91,19 +91,18 @@ class RuleChain(object):
 		self.rules = [None for i in range(24 if self.use24 else 12)]
 	
 	def add(self, timeObject, timeString):
-		#log('Adding rule %s: %s' % (str(timeObject), timeString))
-		# Wrap around for below (rule creation doesn't care)
-		timeObject.hours = timeObject.hours % (24 if self.use24 else 12)
+		log('Adding rule %s: ' % str(timeObject) + timeString.encode('utf-8'))
+		# Use 1-based time for rule resolution
+		timeObject.hours = (timeObject.hours - 1) % (24 if self.use24 else 12) + 1
 		rule = [self.createToken(word, timeObject) for word in timeString.split(' ')]
-		# Contains no symbols, only constants - only add rule for its hour
+		# If rule contains no symbols, only constants, then only add rule for its hour
 		isConst = ([isinstance(token, Constant) for token in rule].count(False) == 0)
-		
-		#log('isConst: ' + str(isConst))
-		
-		for i in range(len(self.rules)):
-			if isConst and i != timeObject.hours:
+		# i_0 is 0-based hour, i_1 is 1-based hour
+		for i_0 in range(len(self.rules)):
+			i_1 = (i_0 - 1) % (24 if self.use24 else 12) + 1
+			if isConst and i_1 != timeObject.hours:
 				continue
-			self.rules[i] = self.insert(self.rules[i], rule, timeObject, i, True)
+			self.rules[i_0] = self.insert(self.rules[i_0], rule, timeObject, i_1, True)
 	
 	def insert(self, node, rule, time, ruleChainHour, first = False): # first = only for logging
 		i = ruleChainHour
@@ -152,8 +151,6 @@ class RuleChain(object):
 		if self.isSymbol(token):
 			return Symbol(token, time, self.strings, self.timeSource, self.use24, self.use0)
 		elif self.isCompound(token):
-			log('Found compound token: ' + token)
-			log('Split into parts: ' + str(self.getParts(token)))
 			parts = [self.createToken(part, time) for part in self.getParts(token)]
 			return Compound(parts)
 		else:
