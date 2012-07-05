@@ -17,14 +17,14 @@ class Master:
 		windowXML = windowGUI.toXMLPrettyPlease()
 		
 		# Create a mimic directory that we can write to
-		skinDir = os.path.join(config.dataDir, 'resources', 'skins', 'Default', '720p')
+		skinDir = os.path.join(config.profile, 'resources', 'skins', 'Default', '720p')
 		if not os.path.isdir(skinDir):
 			os.makedirs(skinDir)
 		ElementTree.ElementTree(windowXML).write(os.path.join(skinDir, 'unqlocked.xml'))
 		log('Wrote ' + os.path.join(skinDir, 'unqlocked.xml'))
 		
 		# Now create the GUI window
-		self.window = window.UnqlockedWindow('unqlocked.xml', config.dataDir, 'Default')
+		self.window = window.UnqlockedWindow('unqlocked.xml', config.profile, 'Default')
 		self.window.setLayout(config.layout)
 		self.window.drawBackground()
 		

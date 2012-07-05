@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
-	<setting label="30000" id="layout" type="fileenum" mask=".xml" option="hideext" values="layouts" default="English 10x11" />
+	<setting label="30000" id="layout" type="fileenum" mask=".xml" option="hideext" values="layouts" default="Default" />
 	<!--<setting type="sep" />-->
-	<setting label="30001" id="theme" type="fileenum" mask=".xml" option="hideext" values="themes" default="Black Ice Tea" />
-	<setting label="30002" id="sprites" type="bool" default="true" />
+	<setting label="30001" id="theme" type="fileenum" mask=".xml" option="hideext" values="themes" default="Default" />
+	<!--<setting label="30002" id="sprites" type="bool" default="true" />-->
 	<!-- File selector to override windowxml with a custom xml -->
 	<!-- Preview button -->
 </settings>

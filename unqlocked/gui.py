@@ -104,7 +104,7 @@ class Matrix(object):
 	def getFont(self):
 		'''Parse the current skin's Font.xml file for a list of font names by
 		size'''
-		log('Loading font set from current skin (%s)' % xbmc.getSkinDir())
+		log('Loading font set from current skin: ' + xbmc.getSkinDir())
 		
 		fontName = ''
 		# Use letterHeight (reasoning: WIDTH may be elastic in the future)
