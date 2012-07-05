@@ -149,3 +149,4 @@ class Theme:
 			self.inactive = root.find('inactive').text
 		except:
 			log('Error parsing theme file!')
+			sys.exit()

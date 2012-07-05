@@ -2,6 +2,7 @@ import gui, monitor, statemachine, solver, window
 from unqlocked import log, Time, WINDOW_ID
 
 import os
+import shutil # for copyfile()
 import elementtree.ElementTree as ElementTree
 import xbmc, xbmcgui
 
@@ -23,6 +24,19 @@ class Master:
 		ElementTree.ElementTree(windowXML).write(os.path.join(skinDir, 'unqlocked.xml'))
 		log('Wrote ' + os.path.join(skinDir, 'unqlocked.xml'))
 		
+		# Copy our images over to the new folder
+		mediaDir = os.path.join(config.profile, 'resources', 'skins', 'Default', 'media')
+		if not os.path.isdir(mediaDir):
+			os.makedirs(mediaDir)
+		# TODO: Allow layout to specify background images
+		images = ['unqlocked-1px-white.png']
+		for image in images:
+			imgPath = os.path.join(config.themeDir, 'images', image)
+			newPath = os.path.join(mediaDir, image)
+			if not os.path.exists(newPath):
+				shutil.copyfile(imgPath, newPath)
+				log('Wrote ' + newPath)
+		
 		# Now create the GUI window
 		self.window = window.UnqlockedWindow('unqlocked.xml', config.profile, 'Default')
 		self.window.setLayout(config.layout)
@@ -30,7 +44,7 @@ class Master:
 		
 		# Create the threads
 		self.qlockThread = statemachine.QlockThread(self.window, config.layout)
-		#self.spriteThread = statemachine.SpriteThread(self.window, config)
+		#self.spriteThread = statemachine.SpriteThread(self.window, config) # not implemented yet
 	
 	def spin(self):
 		self.qlockThread.start()
