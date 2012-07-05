@@ -13,9 +13,6 @@
 		E,T,S,D,E,M,I,E,P,A,N
 	</background>
 	<times>
-		<time id="12:35">il est %1h% heure moins %25m%</time>
-		<time id="12:45">il est %1h% heure moins le %15m%</time>
-		<time id="12:50">il est %1h% heure moins %10m%</time>
 		<time id="1:00">il est %1h% heure</time>
 		<time id="1:05">il est %1h% heure %5m%</time>
 		<time id="1:15">il est %1h% heure et %15m%</time>
@@ -29,6 +26,9 @@
 		<time id="2:15">il est %2h% heures et %15m%</time>
 		<time id="2:20">il est %2h% heures %20m%</time>
 		<time id="2:30">il est %2h% heures et %30m%</time>
+		<time id="12:35">il est %1h% heure moins %25m%</time>
+		<time id="12:45">il est %1h% heure moins le %15m%</time>
+		<time id="12:50">il est %1h% heure moins %10m%</time>
 	</times>
 	<strings>
 		<string id="1">une</string>

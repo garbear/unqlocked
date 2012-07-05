@@ -17,33 +17,39 @@ class StateMachine(threading.Thread):
 		super(StateMachine, self).__init__()
 		self._stop = False
 		self.waitCondition = threading.Condition()
-		
+		self.delay = delay
 		now = datetime.datetime.now()
 		seconds = now.hour * 60 * 60 + now.minute * 60 + now.second
-		
-		self.delay = delay
+		# Round the time down
+		seconds = (seconds / self.delay) * self.delay
+		self.state = Time(seconds / (60 * 60), (seconds / 60) % 60, seconds % 60)
 		# When we first start the thread, the window might not be active yet.
 		# Keep track of whether we sight the window; if it subsequently falls
 		# off the map, we know we should exit
 		self.windowSighted = False
 	
 	def run(self):
-		log('StateMachine starting')
 		self.waitCondition.acquire()
 		while not self.shouldStop():
 			# Allow the subclass to update the GUI
-			log('StateMachine stepping')
-			time = Time(-1, 1)
-			self.step(time)
-			# Calculate when the next step should be
-			self.delay = 100.0
-			self.waitCondition.wait(self.delay)
+			log('StateMachine: visiting state ' + str(self.state))
+			self.step(self.state)
+			# Compute the next state
+			next = (self.state.toSeconds() + self.delay) % (24 * 60 * 60)
+			self.state = Time(next / (60 * 60), (next / 60) % 60, next % 60)
+			# Calculate the delay
+			now = datetime.datetime.now()
+			seconds = now.hour * 60 * 60 + now.minute * 60 + now.second + now.microsecond / 1000000.0
+			delay = self.state.toSeconds() - seconds
+			if delay < 0:
+				delay = delay + 24 * 60 * 60
+			log('Sleeping for %f seconds' % delay)
+			self.waitCondition.wait(delay)
 		#except:
 		#	log('Exception thrown in StateMachine thread')
 		#	self.stop()
 		self.waitCondition.release()
 		self.cleanup()
-		log('StateMachine exiting')
 	
 	def shouldStop(self):
 		'''Two conditions result in stopping: a call to stop(), or the window
@@ -68,14 +74,12 @@ class QlockThread(StateMachine):
 		self.window = window
 		# Use a lowercase matrix for comparison
 		self.layout = deepcopy(layout)
-		# TODO: inline
 		for row in range(self.layout.height):
 			for col in range(self.layout.width):
 				self.layout.matrix[row][col] = self.layout.matrix[row][col].lower()
 		# Instantiate the solver
 		log('Creating the solver')
 		self.solver = solver.Solver(layout.times, layout.use24, layout.strings)
-		log('Solver created')
 	
 	def step(self, time):
 		# Ask the solver for the time
@@ -154,11 +158,11 @@ class QlockThread(StateMachine):
 		pass
 	
 	def calcDelay(self, layout):
-		'''The delay is calculated from the GCD of every time entry.'''
+		'''The delay is calculated from the GCD of all time entries.'''
 		return reduce(gcd, [time.toSeconds() for time in layout.times.keys()])
 
 
-
+# Not implemented yet
 class SpriteThread(StateMachine):
 	def __init__(self, window, config):
 		super(SpriteThread, self).__init__(self.calcDelay(config))
@@ -173,4 +177,4 @@ class SpriteThread(StateMachine):
 		pass
 	
 	def calcDelay(self, config):
-		return 5.0
+		return 60
