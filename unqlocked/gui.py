@@ -205,21 +205,19 @@ class Backgrounds(object):
 		# </control>
 		controls.append(control)
 		
-		return controls # Remove me if an image is desired
-		
-		# Example of how to insert an image
-		# <control>
-		control = Element('control', type='image')
-		if True:
-			width = WIDTH + 100 # or 1280 for fullscreen
-			height = HEIGHT + 100 # or 720 for fullscreen
-			SubElement(control, 'posx').text = str((1280 - width) / 2)
-			SubElement(control, 'posy').text = str((720 - height) / 2)
-			SubElement(control, 'width').text = str(width)
-			SubElement(control, 'height').text = str(height)
-			SubElement(control, 'texture', border=str(10)).text = 'qlock.png'
-		# </control>
-		controls.append(control)
+		if self.theme.image:
+			# <control>
+			control = Element('control', type='image')
+			if True:
+				width = self.theme.imageWidth
+				height = self.theme.imageHeight
+				SubElement(control, 'posx').text = str((1280 - width) / 2)
+				SubElement(control, 'posy').text = str((720 - height) / 2)
+				SubElement(control, 'width').text = str(width)
+				SubElement(control, 'height').text = str(height)
+				SubElement(control, 'texture').text = self.theme.image # , border=str(10)
+			# </control>
+			controls.append(control)
 		return controls
 
 

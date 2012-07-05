@@ -29,12 +29,12 @@
 	</background>
 	-->
 	<times>
-		<time id="12:35">es la %1h% menos %25m%</time>
 		<time id="1:00">es la %1h%</time>
 		<time id="1:05">es la %1h% y %5m%</time>
 		<time id="1:35">son las %2h% menos %25m%</time>
 		<time id="2:00">son las %2h%</time>
 		<time id="2:05">son las %2h% y %5m%</time>
+		<time id="12:35">es la %1h% menos %25m%</time>
 	</times>
 	<strings>
 		<string id="1">una</string>

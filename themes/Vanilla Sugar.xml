@@ -1,8 +1,6 @@
 <theme>
-	<preview>
-		http://www.qlocktwo.com/downloads/ENGLISH/VanilaSugar_Screen_EN.jpg
-	</preview>
-	<background>ffd8d8d8</background>
-	<active>ffffffff</active>
-	<inactive>ff86827f</inactive>
+	<!-- Image credit: Hitcher's Alaska Revisited skin -->
+	<image>vanilla sugar.png</image>
+	<active>ff505050</active>
+	<inactive>ffb8b8b8</inactive>
 </theme>

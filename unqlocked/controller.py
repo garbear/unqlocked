@@ -44,10 +44,12 @@ class Master:
 		mediaDir = os.path.join(config.profile, 'resources', 'skins', 'Default', 'media')
 		if not os.path.isdir(mediaDir):
 			os.makedirs(mediaDir)
-		# TODO: Allow layout to specify background images
+		# Allow layout to specify background images
 		images = ['unqlocked-1px-white.png']
+		if config.theme.image:
+			images.append(config.theme.image)
 		for image in images:
-			imgPath = os.path.join(config.themeDir, 'images', image)
+			imgPath = os.path.join(config.themeDir, image)
 			newPath = os.path.join(mediaDir, image)
 			if not os.path.exists(newPath):
 				shutil.copyfile(imgPath, newPath)

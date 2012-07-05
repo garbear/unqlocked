@@ -62,7 +62,9 @@ class Config:
 		if theme == 'Default':
 			# Choose the best theme for the current skin
 			map = {
-				'skin.confluence': 'Black Ice Tea'}
+				'skin.alaska.revisited': 'Vanilla Sugar',
+				'skin.confluence':       'Black Ice Tea',
+				'skin.xeebo':            'Gritty Guacamole'}
 			skin = xbmc.getSkinDir()
 			if skin in map:
 				theme = map[skin]
@@ -159,9 +161,23 @@ class Theme:
 			log('Error parsing theme file!')
 			raise # Let the user see the error
 		try:
-			self.background = root.find('background').text
 			self.active = root.find('active').text
 			self.inactive = root.find('inactive').text
+			imgNode = root.find('image')
+			if imgNode != None:
+				self.image = imgNode.text
+				# Width and height default to fullscreen if unspecified
+				self.imageWidth = int(imgNode.attrib['width']) if 'width' in imgNode.attrib else 1280
+				self.imageHeight = int(imgNode.attrib['height']) if 'height' in imgNode.attrib else 720
+				# If an image was found, background is optional
+				if root.find('background') != None:
+					self.background = root.find('background').text
+				else:
+					self.background = '00ffffff' # fully transparent
+			else:
+				# If an image wasn't found, background is mandatory
+				self.background = root.find('background').text
+				self.image = None
 		except:
 			log('Error parsing theme file!')
 			sys.exit()
