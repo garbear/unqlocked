@@ -6,8 +6,8 @@ import os
 PROPERTY_ACTIVE = 'Unqlocked.%i.Highlight'
 PROPERTY_INACTIVE = 'Unqlocked.%i.Background'
 
-WIDTH = 420
-HEIGHT = 420
+WIDTH = 500
+HEIGHT = 500
 
 class Letter(object):
 	def __init__(self, index):
@@ -172,7 +172,6 @@ class Backgrounds(object):
 	def __init__(self, theme):
 		self.theme = theme
 	
-	# TODO: Don't hardcode width and height (and account for the offsets)
 	def toXMLArray(self):
 		'''Return an array of controls to be used as backgrounds'''
 		controls = []
@@ -183,20 +182,23 @@ class Backgrounds(object):
 			SubElement(control, 'posy').text = str(0)
 			SubElement(control, 'width').text = str(1280)
 			SubElement(control, 'height').text = str(720)
-			SubElement(control, 'colordiffuse').text = 'FFFFFFFF' # AARRGGBB
-			SubElement(control, 'texture').text = 'unqlocked-1px-black.png'
+			SubElement(control, 'colordiffuse').text = self.theme.background # AARRGGBB
+			SubElement(control, 'texture').text = 'unqlocked-1px-white.png'
 		# </control>
 		controls.append(control)
 		
-		return controls
+		return controls # Remove me if an image is desired
 		
+		# Example of how to insert an image
 		# <control>
 		control = Element('control', type='image')
 		if True:
-			SubElement(control, 'posx').text = str(428)
-			SubElement(control, 'posy').text = str(165)
-			SubElement(control, 'width').text = str(425)
-			SubElement(control, 'height').text = str(390)
+			width = WIDTH + 100 # or 1280 for fullscreen
+			height = HEIGHT + 100 # or 720 for fullscreen
+			SubElement(control, 'posx').text = str((1280 - width) / 2)
+			SubElement(control, 'posy').text = str((720 - height) / 2)
+			SubElement(control, 'width').text = str(width)
+			SubElement(control, 'height').text = str(height)
 			SubElement(control, 'texture', border=str(10)).text = 'qlock.png'
 		# </control>
 		controls.append(control)
