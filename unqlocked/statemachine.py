@@ -1,8 +1,7 @@
 from unqlocked import log, createTruthMatrix, gcd, WINDOW_ID, Time
-
 import solver
 
-import xbmc
+import xbmc # for getCondVisibility()
 import threading
 import datetime
 #import time
@@ -18,6 +17,7 @@ class StateMachine(threading.Thread):
 		self._stop = False
 		self.waitCondition = threading.Condition()
 		self.delay = delay
+		# Calculate the initial state from the current time
 		now = datetime.datetime.now()
 		seconds = now.hour * 60 * 60 + now.minute * 60 + now.second
 		# Round the time down
@@ -108,7 +108,7 @@ class QlockThread(StateMachine):
 			if not len(tokens):
 				break
 			consumed = self.highlightRow(charMatrix[row], row, truthMatrix, tokens, forceSpace)
-			tokens = tokens[consumed:]
+			tokens = tokens[consumed:] # snip snip
 		return len(tokens) == 0
 	
 	def highlightRow(self, charRow, row, truthMatrix, tokens, forceSpace = True):
@@ -131,6 +131,7 @@ class QlockThread(StateMachine):
 			if len(tokens) == 0:
 				break
 			token = tokens[0]
+			# Convert the (useful part of) charRow to a string for comparison
 			if ''.join(charRow[i:]).startswith(token):
 				# Found a match
 				while len(token):
@@ -143,7 +144,8 @@ class QlockThread(StateMachine):
 				# i was set to the end of the token, but we increment i as part
 				# of the while loop, so the end result is that consecutive words
 				# are automatically avoided. To reverse this, decrement i to
-				# cancel out the while loop's increment
+				# cancel out the while loop's increment (Post-mortem: we could
+				# also just *continue*, but where's the fun in that?)
 				if not forceSpace:
 					i = i - 1
 				# Elements have been highlighted, move on to the next token
