@@ -1,13 +1,30 @@
+# *  This Program is free software; you can redistribute it and/or modify
+# *  it under the terms of the GNU General Public License as published by
+# *  the Free Software Foundation; either version 2, or (at your option)
+# *  any later version.
+# *
+# *  This Program is distributed in the hope that it will be useful,
+# *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+# *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# *  GNU General Public License for more details.
+# *
+# *  You should have received a copy of the GNU General Public License
+# *  along with XBMC; see the file COPYING.  If not, write to
+# *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+# *  http://www.gnu.org/copyleft/gpl.html
+
 from unqlocked import log, WINDOW_ID
-import xbmc
+
 from elementtree.ElementTree import Element, SubElement, parse
 import os
+import xbmc
 
 PROPERTY_ACTIVE = 'Unqlocked.%i.Highlight'
 PROPERTY_INACTIVE = 'Unqlocked.%i.Background'
 
 WIDTH = 500
 HEIGHT = 500
+
 
 class Letter(object):
 	def __init__(self, index):
@@ -29,6 +46,7 @@ class Letter(object):
 			SubElement(item, 'onclick').text = '-'
 		# </item>
 		return item
+
 
 class Matrix(object):
 	def __init__(self, letters, layout, theme):
@@ -204,6 +222,7 @@ class Backgrounds(object):
 		controls.append(control)
 		return controls
 
+
 # http://effbot.org/zone/element-lib.htm#prettyprint
 def indent(elem, level=0):
 	'''In-place prettyprint formatter'''
@@ -220,6 +239,7 @@ def indent(elem, level=0):
 	else:
 		if level and (not elem.tail or not elem.tail.strip()):
 			elem.tail = i
+
 
 class Window(object):
 	def __init__(self, layout, theme):
