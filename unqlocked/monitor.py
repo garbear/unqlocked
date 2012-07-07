@@ -16,11 +16,13 @@
 import xbmc
 
 class ExitMonitor(xbmc.Monitor):
-	def __init__(self, exit_callback):
+	def __init__(self, exit_callback, screensaverMode):
 		self.exit_callback = exit_callback
+		self.screensaverMode = screensaverMode
 	
 	def onScreensaverDeactivated(self):
-		self.exit_callback()
+		if self.screensaverMode:
+			self.exit_callback()
 	
 	def onAbortRequested(self):
 		self.exit_callback()

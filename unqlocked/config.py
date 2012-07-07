@@ -31,6 +31,7 @@ class Config:
 		self.author    = self.addon.getAddonInfo('author')
 		self.version   = self.addon.getAddonInfo('version')
 		self.profile   = xbmc.translatePath(self.addon.getAddonInfo('profile'))
+		self.ssMode    = xbmc.getCondVisibility('System.ScreenSaverActive')
 		#self.language  = self.addon.getLocalizedString
 		self.layoutDir = os.path.join(self.cwd, 'layouts')
 		self.layout    = Layout(self.getLayoutFile(self.layoutDir))

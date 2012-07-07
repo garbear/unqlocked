@@ -29,11 +29,13 @@ PROPERTY_INACTIVE = 'Unqlocked.%i.Background'
 
 
 class UnqlockedWindow(xbmcgui.WindowXMLDialog):
-	def setLayout(self, layout):
-		self.layout = layout
+	def setConfig(self, config):
+		'''Only need the layout and the screensaver mode from config'''
+		self.layout = config.layout
+		self.screensaverMode = config.ssMode
 	
 	def onInit(self):
-		self.monitor = monitor.ExitMonitor(self.exit)
+		self.monitor = monitor.ExitMonitor(self.exit, self.screensaverMode)
 	
 	def drawBackground(self):
 		for row in range(self.layout.height):

@@ -30,7 +30,7 @@ class Master:
 			sys.exit()
 		
 		# Generate and pretty-print the GUI XML
-		windowGUI = gui.Window(config.layout, config.theme)
+		windowGUI = gui.Window(config.layout, config.theme, config.ssMode)
 		windowXML = windowGUI.toXMLPrettyPlease()
 		
 		# Create a mimic directory that we can write to
@@ -57,7 +57,7 @@ class Master:
 		
 		# Now create the GUI window
 		self.window = window.UnqlockedWindow('unqlocked.xml', config.profile, 'Default')
-		self.window.setLayout(config.layout)
+		self.window.setConfig(config)
 		self.window.drawBackground()
 		
 		# Create the threads

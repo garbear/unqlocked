@@ -186,39 +186,28 @@ class Sprites(object):
 		pass
 
 
-class Backgrounds(object):
-	def __init__(self, theme):
-		self.theme = theme
+class Image(object):
+	def __init__(self, width, height, image, diffuse=None):
+		self.width = width
+		self.height = height
+		self.image = image
+		self.diffuse = diffuse
 	
-	def toXMLArray(self):
-		'''Return an array of controls to be used as backgrounds'''
-		controls = []
+	def toXML(self):
 		# <control>
 		control = Element('control', type='image')
 		if True:
-			SubElement(control, 'posx').text = str(0)
-			SubElement(control, 'posy').text = str(0)
-			SubElement(control, 'width').text = str(1280)
-			SubElement(control, 'height').text = str(720)
-			SubElement(control, 'colordiffuse').text = self.theme.background # AARRGGBB
+			SubElement(control, 'posx').text = str((1280 - self.width) / 2)
+			SubElement(control, 'posy').text = str((720 - self.height) / 2)
+			SubElement(control, 'width').text = str(self.width)
+			SubElement(control, 'height').text = str(self.height)
+			SubElement(control, 'texture').text = self.image # , border=str(10)
 			SubElement(control, 'texture').text = 'unqlocked-1px-white.png'
+			if self.diffuse:
+				SubElement(control, 'colordiffuse').text = self.diffuse # AARRGGBB
+			
 		# </control>
-		controls.append(control)
-		
-		if self.theme.image:
-			# <control>
-			control = Element('control', type='image')
-			if True:
-				width = self.theme.imageWidth
-				height = self.theme.imageHeight
-				SubElement(control, 'posx').text = str((1280 - width) / 2)
-				SubElement(control, 'posy').text = str((720 - height) / 2)
-				SubElement(control, 'width').text = str(width)
-				SubElement(control, 'height').text = str(height)
-				SubElement(control, 'texture').text = self.theme.image # , border=str(10)
-			# </control>
-			controls.append(control)
-		return controls
+		return control
 
 
 # http://effbot.org/zone/element-lib.htm#prettyprint
@@ -240,23 +229,27 @@ def indent(elem, level=0):
 
 
 class Window(object):
-	def __init__(self, layout, theme):
+	def __init__(self, layout, theme, screensaverMode):
 		self.letters = [Letter(i) for i in range(layout.width * layout.height)]
 		self.layout = layout
 		self.theme = theme
+		self.screensaverMode = screensaverMode
 	
 	def toXML(self):
 		# <window>
 		window = Element('window', id=str(WINDOW_ID))
 		if True:
-			# Fade in for 1.0 second
-			SubElement(window, 'animation', effect='fade', time=str(1000)).text = 'WindowOpen'
+			# Fade in for 1.0 second (but not in screensaver mode)
+			if not self.screensaverMode:
+				SubElement(window, 'animation', effect='fade', time=str(1000)).text = 'WindowOpen'
 			# <controls>
 			controls = SubElement(window, 'controls')
 			if True:
-				backgrounds = Backgrounds(self.theme)
-				for background in backgrounds.toXMLArray():
-					controls.append(background)
+				backgroundColor = Image(1280, 720, 'unqlocked-1px-white.png', self.theme.background)
+				controls.append(backgroundColor.toXML())
+				if self.theme.image:
+					backgroundImage = Image(self.theme.imageWidth, self.theme.imageHeight, self.theme.image)
+					controls.append(backgroundImage.toXML())
 				#sprites = Sprites(self.layout, self.theme)
 				#controls.append(sprites.toXML())
 				matrix = Matrix(self.letters, self.layout, self.theme)
