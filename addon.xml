@@ -6,10 +6,8 @@
   <requires>
     <import addon="xbmc.python" version="1.0"/>
   </requires>
-  <!--
   <extension point="xbmc.ui.screensaver"
              library="default.py"/>
-  -->
   <extension point="xbmc.python.script"
              library="default.py"/>
   <extension point="xbmc.addon.metadata">
