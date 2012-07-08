@@ -10,7 +10,7 @@ https://github.com/garbear/unqlocked
 
 Limited support is available on the XBMC forum. You may also find additional
 clocks and themes:
-http://forum.xbmc.org/newthread.php?fid=26&processed=1
+http://forum.xbmc.org/showthread.php?tid=135578
 
 
 == How to run ==
