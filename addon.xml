@@ -12,7 +12,7 @@
              library="default.py"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">UnQlocked script</summary>
-    <description lang="en">Script to display the current time using common phrases instead of numbers. Originally an unabashed ripoff of Biegert &amp; Funk's awesome QLOCKTWO, this script has been extended to support a much larger set of languages and configurations.</description>
+    <description lang="en">Script to display the current time using common phrases instead of numbers. Originally an unabashed ripoff of Biegert &amp; Funk's awesome product, this script has been extended to support a much larger set of languages and configurations.</description>
     <platform>all</platform>
   </extension>
 </addon>
