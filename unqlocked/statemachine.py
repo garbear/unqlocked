@@ -40,8 +40,7 @@ class StateMachine(threading.Thread):
 		seconds = now.hour * 60 * 60 + now.minute * 60 + now.second
 		
 		# Round the time down
-		seconds = (seconds / self.delay) * self.delay
-		self.state = Time(seconds / (60 * 60), (seconds / 60) % 60, seconds % 60)
+		self.state = Time.fromSeconds(seconds / self.delay * self.delay)
 		
 		# When we first start the thread, the window might not be active yet.
 		# Keep track of whether we sight the window; if it subsequently falls
@@ -57,7 +56,7 @@ class StateMachine(threading.Thread):
 			
 			# Compute the next state
 			next = (self.state.toSeconds() + self.delay) % (24 * 60 * 60)
-			self.state = Time(next / (60 * 60), (next / 60) % 60, next % 60)
+			self.state = Time.fromSeconds(next)
 			
 			# Calculate the delay
 			now = datetime.datetime.now()
@@ -95,7 +94,8 @@ class StateMachine(threading.Thread):
 
 class QlockThread(StateMachine):
 	def __init__(self, window, layout):
-		super(QlockThread, self).__init__(self.calcDelay(layout))
+		delay = self.calcDelay(layout)
+		super(QlockThread, self).__init__(delay)
 		self.window = window
 		
 		# Use a lowercase matrix for comparison
@@ -104,9 +104,20 @@ class QlockThread(StateMachine):
 			for col in range(self.layout.width):
 				self.layout.matrix[row][col] = self.layout.matrix[row][col].lower()
 		
-		# Instantiate the solver
+		# Let the solver know about the default delay. It will need this
+		# information once it has parsed a times string into tokens.
 		log('Creating the solver')
-		self.solver = solver.Solver(layout.times, layout.use24, layout.strings)
+		
+		now = datetime.datetime.now()
+		start = now.hour * 60 * 60 + now.minute * 60 + now.second + now.microsecond / 1000000.0
+		
+		self.solver = solver.Solver(layout.times, layout.use24, layout.strings, delay)
+		nodes = self.solver.countNodes()
+		
+		now = datetime.datetime.now()
+		stop = now.hour * 60 * 60 + now.minute * 60 + now.second + now.microsecond / 1000000.0
+		
+		log('Solver created in %f seconds with %d nodes and %d rules' % ((stop - start), nodes, len(layout.times)))
 	
 	def step(self, time):
 		# Ask the solver for the time
@@ -114,6 +125,7 @@ class QlockThread(StateMachine):
 		solution = self.solver.resolveTime(time)
 		solutionUTF8 = [uni.encode('utf-8') for uni in solution]
 		log('Solution: ' + str(solutionUTF8))
+		
 		truthMatrix = createTruthMatrix(self.layout.height, self.layout.width)
 		success = self.highlight(self.layout.matrix, truthMatrix, solution)
 		if not success:

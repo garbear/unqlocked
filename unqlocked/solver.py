@@ -159,6 +159,7 @@ class RuleChain(object):
 					# Start at the beginning of the next hour
 					nextTime = Time(timeObject.hours + 1, 0, 0)
 					nextTime.duration = Time.fromSeconds(timeObject.end() - hourBoundary)
+					nextTime.useSeconds = timeObject.useSeconds # For cosmetics
 					self.add(nextTime, timeString, rule)
 				break
 	
@@ -171,23 +172,17 @@ class RuleChain(object):
 		"this node" - the parameter called node
 		"this rule" - the parameter called rule, not this node's rule
 		
-		The strategy is to determine whether this rule occurs before or after
-		this node. If it occurs after, we let recursion run its course by
-		invoking insert() on node.next. The code for this looks like:
-		node.next = self.insert(node.next, rule, time, ruleChainHour)
-		return node
-		
-		
+		Beyond that... good luck!
 		'''
-		l = 0 <= ruleChainHour and ruleChainHour <= 0
+		l = 2 <= ruleChainHour and ruleChainHour <= 2 and False
 		
 		# If true, rule will override node during conflicts
-		precedence = ruleChainHour >= time.hours:
+		precedence = ruleChainHour >= time.hours
 		
 		if node == None:
 			# Base case: insert a new node into the rule chain by creating it
 			# and setting its child to this node.
-			if (l): log('Base case: new node (%d)' % len(rule))
+			if (l): log(str(i) + ' Base case: new node')
 			return RuleNode(rule, time, node)
 		
 		# Assume the same hour as the node so comparisons will work
@@ -203,12 +198,14 @@ class RuleChain(object):
 			# Three cases: rules don't overlap, rules overlap partially, rules overlap fully
 			# Case 1
 			if tempTime.end() <= node.time.toSeconds():
+				if (l): log(str(i) + ' Rules don\t overlap, inserting normally')
 				return RuleNode(rule, time, node)
 			
 			# Case 2
 			if tempTime.end() < node.time.end():
 				if precedence:
 					# Shorten node.time
+					if (l): log(str(i) + ' Rules overlap, shortening prior node')
 					newBeginning = Time.fromSeconds(tempTime.end())
 					newDuration = node.time.duration.toSeconds() - (node.time.end() - tempTime.end())
 					newBeginning.duration = Time.fromSeconds(newDuration)
@@ -216,20 +213,23 @@ class RuleChain(object):
 					return RuleNode(rule, time, node)
 				else:
 					# Shorten time
+					if (l): log(str(i) + ' Rules overlap, shortening rule')
 					time.duration = Time.fromSeconds(node.time.toSeconds() - tempTime.toSeconds())
 					return RuleNode(rule, time, node)
-				
+			
 			# Case 3: time.end() >= node.time.end()
 			if precedence:
 				# Not including this node in the return statement effectively
 				# eliminates it. However, things aren't this simple. We need to
 				# check if the next node is partially/fully consumed via
-				# recursion
+				# recursion.
+				if (l): log(str(i) + ' Rules overlap. Lower precedence, skipping rule')
 				return self.insert(node.next, rule, time, ruleChainHour)
 			else:
 				# Split the rule into two nodes that fall on either side of
 				# this node. We create the following chain:
 				# parent node -> node1 -> node -> node2 -> node.next
+				if (l): log(str(i) + ' Rules overlap. Higher precedence, splitting prior rule')
 				time1 = time.copy()
 				time1.duration = Time.fromSeconds(node.time.toSeconds() - tempTime.toSeconds())
 				node1 = RuleNode(rule, time1, node)
@@ -244,44 +244,82 @@ class RuleChain(object):
 		if tempTime.toSeconds() == node.time.toSeconds():
 			if not precedence:
 				# Ignore the rule
+				if (l): log(str(i) + ' Same time, lower precedence. Ignoring rule')
 				return node
 			
 			# Three cases: tempTime.duration and node.time.duration are True/False
 			# Case 1
 			if not tempTime.duration:
 				# Replace the node
+				if (l): log(str(i) + ' Same time, higher precedence, no duration, replacing rule')
 				return RuleNode(rule, time, node.next)
 			
 			# Case 2
 			if not node.time.duration: # and tempTime.duration
-				# Replace the node, and make sure that we replace any other
-				# overlapped nodes (recursively, of course)
-				# parent node -> node1 -> node.next
-				node1 = self.insert(node.next, rule, time, ruleChainHour)
-				return node1
+				# Peek ahead at the future node
+				if node.next:
+					tempTime2 = Time(node.next.time.hours, time.minutes, time.seconds)
+					tempTime2.duration = time.duration
+					if tempTime2.end() > node.next.time.toSeconds():
+						# Replace the node, and make sure that we replace any other
+						# overlapped nodes (recursively, of course)
+						# parent node -> node1 -> node.next
+						if (l): log(str(i) + ' Same time, higher precedence, duration, replacing rule recursively')
+						node1 = self.insert(node.next, rule, time, ruleChainHour)
+						return node1
+				node.time = Time.fromSeconds(tempTime.end())
+				if (l): log(str(i) + ' Same time, higher precedence, duration, delaying node to ' + str(node.time))
+				return RuleNode(rule, time, node)
 			
 			# Case 3: node.time.duration and tempTime.duration
 			if tempTime.end() >= node.time.end():
 				# Replace the node and any following nodes if necessary
+				if (l): log(str(i) + ' Same time, higher precedence, overwriting rule recursively')
 				node1 = self.insert(node.next, rule, time, ruleChainHour)
 				return node1
 			else:
 				# Chop off and preserve the dangling part
+				if (l): log(str(i) + ' Same time, higher precedence, preserving tail of existing rule')
 				end = node.time.end()
 				node.time = Time.fromSeconds(tempTime.end())
 				# node.time.hours is already set because tempTime.hours was copied earlier
 				node.time.duration = Time.fromSeconds(end - tempTime.end())
 				return RuleNode(rule, time, node)
 		
-		# tempTime.toSeconds() > node.time.toSeconds()
+		# Rule occurs in the future: tempTime.toSeconds() > node.time.toSeconds()
 		
 		# Three cases: rules don't overlap, rules overlap partially, rules overlap fully
 		# Case 1
 		if node.time.end() <= tempTime.toSeconds():
-			# Recurse deeper
-			# TODO: Adding a constant, copy this node after constant
-			node.next = self.insert(node.next, rule, time, ruleChainHour)
-			return node
+			# If node.rule is a constant, it doesn't need to persist after its duration
+			if not tempTime.duration or self.isConstant(node.rule):
+				# Regular rule or node is constant, recurse deeper
+				if (l): log(str(i) + ' Rule in the future, doesn\'t overlap, recursing deeper')
+				node.next = self.insert(node.next, rule, time, ruleChainHour)
+				return node
+			else:
+				# Peek ahead at the future node
+				if node.next:
+					tempTime2 = Time(node.next.time.hours, time.minutes, time.seconds)
+					tempTime2.duration = time.duration
+					if tempTime2.toSeconds() > node.next.time.toSeconds():
+						# Next node is in the future too, recurse deeper
+						if (l): log(str(i) + ' Rule far in the future, recursing deeper')
+						node.next = self.insert(node.next, rule, time, ruleChainHour)
+						return node
+				
+				# tempTime has a duration so node should persist after rule's completion
+				# To do so, we dupe node and let recursion do the rest
+				if (l): log(str(i) + ' Constant rule in the future, cloning and recursing deeper')
+				timeCopy = Time.fromSeconds(tempTime.toSeconds())
+				if node.time.duration:
+					# Need to modify duration of both old and new time
+					timeCopy.duration = Time.fromSeconds(node.time.end() - tempTime.toSeconds())
+					node.time = node.time.copy()
+					node.time.duration = Time.fromSeconds(tempTime.toSeconds() - node.time.toSeconds())
+				nodeCopy = RuleNode(node.rule, timeCopy, node.next)
+				node.next = self.insert(nodeCopy, rule, time, ruleChainHour)
+				return node
 		
 		# Implicit that node.time.duration exists
 		# Case 2
@@ -338,136 +376,6 @@ class RuleChain(object):
 		time1.duration = Time.fromSeconds(tempTime.toSeconds() - node.time.toSeconds())
 		node.time = time1
 		node.next = newNode
-		return node
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		if node.next and Time(node.next.time.hours, time.minutes, time.seconds).toSeconds() \
-					< node.next.time.toSeconds():
-			# Time occurs between node.time and node.next.time, perform the linking
-			if (l): log('Base case: linking in new node after (%d)' % len(node.rule))
-			node.next = RuleNode(rule, time, node.next)
-		else:
-			# Next node doesn't exist, or is earlier than the rule's time.
-			# Recurse deeper.
-			if (l): log('Base case: linking in new node after (%d)' % len(node.rule))
-			node.next = self.insert(node.next, rule, time, ruleChainHour)
-		
-		
-		
-		
-		
-		
-		
-		
-		
-			if tempTime.end() > node.time.toSeconds():
-				# Rule overwrites this node. Not including this node in the
-				# return statement effectively eliminates it. However, it's
-				# not that simple. We need to check if the next node also
-				# has a duration via recursion.
-				if tempTime.end() >= node.time.end():
-					if precedence:
-						return insert(node.next, rule, time, ruleChainHour)
-					# Don't let a later rule overwrite a smaller one
-					# TODO: Break up rule into two encompassing rules
-					# the code for this will be ugly
-					return node
-				
-				# This node doesn't quite go long enough. Get a little
-				# pushy and modify the next node's time.
-				if ruleChainHour >= time.hours:
-					newBeginning = Time.fromSeconds(tempTime.end())
-					newDuration = node.time.duration.toSeconds() - (node.time.end() - tempTime.end())
-					newBeginning.duration = Time.fromSeconds(newDuration)
-					node.time = newBeginning
-					return RuleNode(rule, time, node)
-				# TODO: shorted this rule. For now, err on the safe side and
-				# don't overwrite anything
-				return node
-			
-			if tempTime.end() == node.time.toSeconds():
-				# Duration is just long enough to close the gap
-				return RuleNode(rule, time, node)
-			
-			# tempTime.end() < node.time.toSeconds()
-			
-			# This implies time.duration terminates prematurely before reaching
-			# the next node. Nothing we can do about it, just insert the rule
-			# and expect that another rule will come along to bridge the gap
-			return RuleNode(rule, time, node)
-		
-		if tempTime.toSeconds() == node.time.toSeconds():
-			# Only replace rule if approapriate (that is, the rule chain we are
-			# storing our rule in is later than (or equal to) the rule's time.
-			# This prevents us from having a later rule overwrite an earlier one.
-			# Thus, <time id="1:00">%1h%</time> and <time id="2:00">%2h%</time>
-			# will cause %1h% to be stored for all hours, and %2h% will then
-			# overwrite all hours except for hour 1.
-			if ruleChainHour >= time.hours:
-				# Give precedence to this rule
-				if (l): log('Same time: replacing node (%d) (%d <= %d, %d)' % (len(node.rule), time.hours, ruleChainHour, node.time.hours))
-				if tempTime.duration:
-					if node.time.end() > tempTime.end():
-						# Replace this node, but it extends past this rule's
-						# duration. We need to give this node a new time and move
-						# it to the end of our new node
-						newBeginning = Time.fromSeconds(tempTime.end())
-						newDuration = node.time.duration.toSeconds() - (node.time.end() - tempTime.end())
-						newBeginning.duration = Time.fromSeconds(newDuration)
-						node.time = newBeginning
-						return RuleNode(rule, time, node)
-					# rule consumes this node, but we need to check if it
-					# comsumes any more nodes as well
-					return insert(node.next, rule, time, ruleChainHour)
-				if node.time.duration:
-					# This rule doesn't have a duration, but this node does,
-					# so ignore the new rule.
-					return node
-				# rule and node are both duration-less. Overwrite the node.
-				return RuleNode(rule, time, node.next)
-			else:
-				# Give precendence to existing node
-				if (l): log('Same time: ignoring rule (%d) (%d > %d, %d)' % (len(node.rule), time.hours, ruleChainHour, node.time.hours))
-				if node.time.duration and tempTime.duration and node.next:
-					# Only do duration-calculations if both times have a duration
-					if tempTime.end() > node.time.end():
-						# Only continue the calculation if the rule being
-						# overwritten extends past node's time. Give this rule
-						# a new time in that case.
-						newBeginning = Time.fromSeconds(node.time.end())
-						newDuration = tempTime.duration.toSeconds() - (tempTime.end() - node.time.end())
-						newBeginning.duration = Time.fromSeconds(newDuration)
-						node.next = insert(node.next, rule, newBeginning, ruleChainHour)
-						return node
-					return node
-				return node
-		
-		# tempTime.toSeconds() > node.time.toSeconds()
-		
-		#if tempTime.duration and node.time.duration and tempTime.end() < node.time.end():
-		#	# tempTime occurs within node.time.duration. Split 
-		#	if ruleChainHour >= time.hours and tempTime
-		
-		if node.next and Time(node.next.time.hours, time.minutes, time.seconds).toSeconds() \
-					< node.next.time.toSeconds():
-			# Time occurs between node.time and node.next.time, perform the linking
-			if (l): log('Base case: linking in new node after (%d)' % len(node.rule))
-			node.next = RuleNode(rule, time, node.next)
-		else:
-			# Next node doesn't exist, or is earlier than the rule's time.
-			# Recurse deeper.
-			if (l): log('Base case: linking in new node after (%d)' % len(node.rule))
-			node.next = self.insert(node.next, rule, time, ruleChainHour)
-		
 		return node
 	
 	def isConstant(self, rule):
@@ -550,13 +458,12 @@ class RuleChain(object):
 		return parts
 	
 	def lookup(self, time):
-		log('Looking up rule for %s' % str(time))
 		ruleChain = self.rules[time.hours % (24 if self.use24 else 12)]
 		tokens = []
 		for token in self.lookupRecursive(ruleChain, time):
 			s = unicode(token)
-			# Need to split up multi-word tokens (such as in the case:
-			# <string id="25">twenty five</string>)
+			# Need to split up multi-word tokens, such as in the case:
+			# <string id="25">twenty five</string>
 			tokens.extend(s.split(' ') if ' ' in s else [s])
 		return tokens
 	
@@ -570,12 +477,22 @@ class RuleChain(object):
 			return node.rule
 		
 		# Compare minutes and seconds (by making the hours equal)
-		tempTime = Time(node.time.hours, time.minutes, time.seconds)
-		if tempTime.toSeconds() <= node.time.toSeconds():
+		tempTime = Time(node.next.time.hours, time.minutes, time.seconds)
+		if tempTime.toSeconds() < node.next.time.toSeconds():
 			# Base case: time comes before node.time, so return node.rule
 			return node.rule
 		
 		return self.lookupRecursive(node.next, time)
+	
+	def countNodes(self):
+		'''Returns a count of nodes in this RuleChain'''
+		nodes = 0
+		for i in range(len(self.rules)):
+			nodes = nodes + self.countRecursive(self.rules[i])
+		return nodes
+	
+	def countRecursive(self, node):
+		return 1 + self.countRecursive(node.next) if node else 0
 
 
 class Solver(object):
@@ -608,3 +525,6 @@ class Solver(object):
 		self.time.minutes = time.minutes
 		self.time.seconds = time.seconds
 		return self.rules.lookup(time)
+	
+	def countNodes(self):
+		return self.rules.countNodes()

@@ -42,10 +42,9 @@ class Time(object):
 			self.hours   = int(parts[0]) if len(parts) >= 1 else 0
 			self.minutes = int(parts[1]) if len(parts) >= 2 else 0
 			self.seconds = int(parts[2]) if len(parts) >= 3 else -1
-		self.secondsUsed = (self.seconds != -1)
-		# self.duration:
-		# Optionally, add a duration post-instantation. A duration is simply
-		# another Time object
+		self.useSeconds = (self.seconds != -1)
+		self.seconds = 0 # Don't really store -1 for seconds
+		self.duration = None # By default, a time is just an instant
 	
 	def __hash__(self):
 		#return hash((self.hours, self.minutes, self.seconds))
@@ -55,13 +54,26 @@ class Time(object):
 		return (self.hours, self.minutes, self.seconds) == (other.hours, other.minutes, other.seconds)
 	
 	def __str__(self):
-		if self.secondsUsed:
+		if self.useSeconds:
 			return '%d:%02d:%02d' % (self.hours, self.minutes, self.seconds)
 		else:
 			return '%d:%02d' % (self.hours, self.minutes)
 	
+	def copy(self):
+		temp = Time(self.hours, self.minutes, self.seconds)
+		temp.useSeconds = self.useSeconds
+		temp.duration = self.duration
+		return temp
+	
 	def toSeconds(self):
-		if self.secondsUsed:
+		if self.useSeconds:
 			return self.hours * 60 * 60 + self.minutes * 60 + self.seconds
 		else:
 			return self.hours * 60 * 60 + self.minutes * 60
+	
+	def end(self):
+		return self.toSeconds() + (self.duration.toSeconds() if self.duration else 0)
+	
+	@staticmethod
+	def fromSeconds(seconds):
+		return Time(seconds / (60 * 60), (seconds / 60) % 60, seconds % 60)
