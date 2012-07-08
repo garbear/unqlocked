@@ -5,6 +5,7 @@
        provider-name="Garrett (garbear)">
   <requires>
     <import addon="xbmc.python" version="1.0"/>
+    <import addon="script.module.elementtree" version="1.2.7"/>
   </requires>
   <extension point="xbmc.ui.screensaver"
              library="default.py"/>
