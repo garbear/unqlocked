@@ -1,7 +1,4 @@
 <theme>
-	<preview>
-		http://www.qlocktwo.com/downloads/ENGLISH/BlackIceTeam_Screen_EN.jpg
-	</preview>
 	<background>black</background>
 	<active>fff0f0f0</active>
 	<inactive>ff333333</inactive>

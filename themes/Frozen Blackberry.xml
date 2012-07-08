@@ -1,8 +1,5 @@
 <theme>
-	<preview>
-		http://www.qlocktwo.com/downloads/GERMAN/FrozenBlackberry_Screen_DE.jpg
-	</preview>
 	<background>ff51288c</background>
-	<active>fff7fbfa</active>
-	<inactive>ff878c1e</inactive>
+	<active>ffffffff</active>
+	<inactive>ff4d5f55</inactive>
 </theme>

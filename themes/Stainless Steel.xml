@@ -1,8 +1,5 @@
 <theme>
-	<preview>
-		http://www.qlocktwo.com/downloads/ENGLISH/StainlessSteel_Screen_EN.jpg
-	</preview>
-	<background>ff6c6c6c (brushed)</background>
-	<active>ffffffff</active>
-	<inactive>ff373632</inactive>
+	<image>stainless steel.jpg</image>
+	<inactive>fff8f8f8</inactive>
+	<active>ff606060</active>
 </theme>

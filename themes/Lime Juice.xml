@@ -1,7 +1,4 @@
 <theme>
-	<preview>
-		http://www.qlocktwo.com/downloads/ITALIAN/LimeJuice_Screen_IT.jpg
-	</preview>
 	<background>ffb2bb0a</background>
 	<active>ffffffff</active>
 	<inactive>ff787c25</inactive>
