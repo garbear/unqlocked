@@ -13,12 +13,12 @@
 		T,E,N,S,E,O',C,L,O,C,K
 	</background>
 	<times>
-		<time id="12:00">it is %12 hours and %0 minutes</time>
-		<time id="12:01">it is %12 hours and %1 minute</time>
-		<time id="12:02">it is %12 hours and %1 minutes</time>
 		<time id="1:00">it is %1 hour and %0 minutes</time>
 		<time id="1:01">it is %1 hour and %1 minute</time>
 		<time id="1:02">it is %1 hour and %1 minutes</time>
+		<time id="2:00">it is %2 hours and %0 minutes</time>
+		<time id="2:01">it is %2 hours and %1 minute</time>
+		<time id="2:02">it is %2 hours and %1 minutes</time>
 	</times>
 	<strings>
 		<string id="0">0</string>
