@@ -67,6 +67,12 @@ class Master:
 	def spin(self):
 		self.qlockThread.start()
 		#self.spriteThread.start()
+		
+		# Give the solvers time to do their work, so that when the window fades
+		# in, the solution will already have been highlighted.
+		# I noticed problems as high as 10ms, so use 25ms.
+		xbmc.sleep(25)
+		
 		self.window.doModal()
 		self.qlockThread.stop()
 		#self.spriteThread.stop()
