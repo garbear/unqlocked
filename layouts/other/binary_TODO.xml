@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <layout>
-	<background>
+	<background height="10" width="11">
 		I,T,L,I,S,A,S,T,I,M,E,
 		A,C,Q,U,A,R,T,E,R,D,C,
 		T,W,E,N,T,Y,F,I,V,E,X,
@@ -12,7 +12,7 @@
 		S,E,V,E,N,T,W,E,L,V,E,
 		T,E,N,S,E,O',C,L,O,C,K
 	</background>
-	<times>
+	<times use24="true">
 		<time id="1:00">it is %1 hour and %0 minutes</time>
 		<time id="1:01">it is %1 hour and %1 minute</time>
 		<time id="1:02">it is %1 hour and %1 minutes</time>
