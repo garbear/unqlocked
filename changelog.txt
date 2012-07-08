@@ -1,2 +1,2 @@
-[B]1.0, 2012-07-07[/B]
-. Initial release
+[B]2012-07-07 Version 1.0 by Garbear[/B]
+. Initial release. See README.txt for information.
