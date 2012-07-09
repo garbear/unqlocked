@@ -18,6 +18,9 @@ import unqlocked.controller
 
 config = unqlocked.config.Config()
 
+__author__  = config.author
+__version__ = config.version
+
 if (__name__ == "__main__"):
 	controller = unqlocked.controller.Master(config)
 	controller.spin()
