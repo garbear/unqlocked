@@ -201,8 +201,7 @@ class Image(object):
 			SubElement(control, 'posy').text = str((720 - self.height) / 2)
 			SubElement(control, 'width').text = str(self.width)
 			SubElement(control, 'height').text = str(self.height)
-			SubElement(control, 'texture').text = self.image # , border=str(10)
-			SubElement(control, 'texture').text = 'unqlocked-1px-white.png'
+			SubElement(control, 'texture').text = self.image
 			if self.diffuse:
 				SubElement(control, 'colordiffuse').text = self.diffuse # AARRGGBB
 			
