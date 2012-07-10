@@ -23,6 +23,10 @@ import xbmcaddon
 
 
 class Config:
+	'''
+	Config is the interface between this script and most external variables,
+	including addon settings and the script's XML files.
+	'''
 	def __init__(self):
 		self.scriptId   = 'script.unqlocked'
 		self.addon      = xbmcaddon.Addon(self.scriptId)
@@ -97,7 +101,8 @@ class Config:
 
 
 class Layout:
-	'''Load an XML layout file into several parameters:
+	'''
+	Load an XML layout file into several parameters:
 	* self.matrix - The 2-dimensional array of background characters
 	* self.height - equal to len(self.matrix)
 	* self.width - equal to len(self.matrix[0])
@@ -172,7 +177,8 @@ class Layout:
 
 
 class Theme:
-	'''A theme has several elements that can be accessed through this class:
+	'''
+	A theme has several elements that can be accessed through this class:
 	* self.background  - The background color
 	* self.active      - The color of enabled tiles
 	* self.inactive    - The color of disabled tiles

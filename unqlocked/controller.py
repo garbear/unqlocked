@@ -29,8 +29,6 @@ class Master:
 			log('Bailing out (window already exists?)')
 			sys.exit()
 		
-		self.ssMode = config.ssMode
-		
 		# Generate and pretty-print the GUI XML
 		windowGUI = gui.Window(config.layout, config.theme, config.ssMode)
 		windowXML = windowGUI.toXMLPrettyPlease()
@@ -77,7 +75,7 @@ class Master:
 		# Give the solvers time to do their work, so that when the window fades
 		# in, the solution will already have been highlighted.
 		# I noticed problems as high as 10ms, so use 25ms.
-		if not self.ssMode:
+		if not self.config.ssMode:
 			xbmc.sleep(25)
 		
 		self.window.doModal()

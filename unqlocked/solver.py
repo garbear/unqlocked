@@ -17,15 +17,18 @@ from unqlocked import log, Time
 
 from copy import deepcopy
 
+
 class Token(object):
 	'''
 	Base class, a token can be a string constant or a symbol (appearing as
-	%1h% in the <time> text).
+	%1h% in the <time> text), as well as a compound token (basically an array
+	of strings and symbols).
 	'''
 	pass
 
 
 class Constant(Token):
+	'''A Constant is a token that doesn't change as a function of time'''
 	def __init__(self, name):
 		self.name = name
 	
@@ -37,7 +40,7 @@ class Symbol(Token):
 	'''
 	A symbol has these properties:
 	self.unit - the hour, minute or second of this symbol
-	self.transform - lambda function that determines the actual number of this symbol
+	self.transform - lambda function that determines the actual value of this symbol
 	self.stringTable - dictionary for the final conversion of number to string
 	self.timeSource - when converted to a string, this is used as the current time
 	
@@ -76,8 +79,8 @@ class Symbol(Token):
 		'''
 		Convert the symbol to a string. If the stringTable entry for the
 		calculated number has a space, then the returned value will also have
-		a space and will need to be split. The the string table entry does not
-		exist, an empty string is returned.
+		a space and therefore will need to be split. The the string table entry
+		does not exist, an empty string is returned.
 		'''
 		if self.unit == 'h':
 			id = self.transform(self.timeSource.hours)
@@ -104,6 +107,10 @@ class Compound(Token):
 
 
 class RuleNode(object):
+	'''
+	RuleChains are singly-linked lists of rules for a given hour. RuleNode is
+	the list element for these linked lists.
+	'''
 	def __init__(self, rule, time, next = None):
 		self.rule = rule
 		self.time = time
@@ -111,21 +118,29 @@ class RuleNode(object):
 
 
 class RuleChain(object):
+	'''
+	A RuleChain is where the majority of the effort goes in solving for a given
+	time. RuleChain construction occurs by adding rules via add(), which then
+	builds up a sequence of how the time should be represented for the given
+	hour.
+	'''
 	def __init__(self, strings, timeSource, use24, use0, defaultDuration):
 		self.strings = strings
 		self.timeSource = timeSource
 		self.use24 = use24
 		self.use0 = use0
 		self.defaultDuration = defaultDuration
+		# Initialize the rule chain with empty nodes
 		self.rules = [None for i in range(24 if self.use24 else 12)]
 	
 	def add(self, timeObject, timeString, rule = None):
 		'''
 		timeObject - the id found in the <time> tag
 		timeString - the text of the <time> tag
-		rule - if the rule has already been created, it can be passed in as a
-		parameter to avoid creating an unnecessary copy. Only do this if the
-		rule is a constant (no symbols); otherwise, a modified timeObject will
+		rule - this parameter is purely for recursion. Because the rule has
+		already been created, it can be passed in as a parameter to avoid
+		creating an unnecessary copy. Recursion is only employed if the rule is
+		a constant (no symbols); otherwise, a modified timeObject will
 		invalidate the rule.
 		'''
 		log('Adding rule %s: ' % str(timeObject) + timeString.encode('utf-8'))
@@ -176,7 +191,24 @@ class RuleChain(object):
 		"this node" - the parameter called node
 		"this rule" - the parameter called rule, not this node's rule
 		
-		Beyond that... good luck!
+		Once upon a time, the code for this function was short and concise.
+		Then the dawning of the "duration" attribute appeared. With this
+		attribute, a constant and a rule of variants can overlap and overwrite
+		other rules. The code is now much more complex, because each hour has
+		to be properly partitioned by rules defined in all hours; and not only
+		this, but this partitioned time has to be represented by linked lists
+		and everything has to occur recursively.
+		
+		Keep in mind: Constants ALWAYS have a duration (if it isn't explicitly
+		declared, then it defaults to the GCD). Rule with no duration are
+		considered to be rules with INFINITE duration. Variant rules CAN have a
+		duration; this acts to give them a lower priority in times past the end
+		of the duration.
+		
+		The return value of this function is a RuleNode which (in the first
+		level deep) becomes the new root node for that hour in the RuleChain.
+		Therefore, it is helpful to think of the return value as a way to
+		modify the parent node's next node.
 		'''
 		# If true, rule will override node during conflicts
 		precedence = ruleChainHour >= time.hours
@@ -190,20 +222,26 @@ class RuleChain(object):
 		tempTime = Time(node.time.hours, time.minutes, time.seconds)
 		tempTime.duration = time.duration
 		
+		# At the highest level, we consider three cases: the time attached to
+		# this rule is either before, equal to, or after the time of this node.
+		
 		if tempTime.toSeconds() < node.time.toSeconds():
-			# Time occurs before this node, prepend it to the chain
+			# Time occurs before this node. In all cases, the rule is prepended
+			# to the chain. Keep in mind, a time with no duration is basically
+			# a time with infinite duration. Also keep in mind, Constants
+			# ALWAYS have a duration.
 			if not time.duration:
 				return RuleNode(rule, time, node)
 			
 			# Three cases: rules don't overlap, rules overlap partially, rules overlap fully
-			# Case 1
+			# Case 1: rules don't overlap
 			if tempTime.end() <= node.time.toSeconds():
 				return RuleNode(rule, time, node)
 			
-			# Case 2
+			# Case 2: rules overlap partially
 			if tempTime.end() < node.time.end():
 				if precedence:
-					# Shorten node.time
+					# Move node into the furture and shorten its duration
 					newBeginning = Time.fromSeconds(tempTime.end())
 					newDuration = node.time.duration.toSeconds() - (node.time.end() - tempTime.end())
 					newBeginning.duration = Time.fromSeconds(newDuration)
@@ -214,7 +252,8 @@ class RuleChain(object):
 					time.duration = Time.fromSeconds(node.time.toSeconds() - tempTime.toSeconds())
 					return RuleNode(rule, time, node)
 			
-			# Case 3: time.end() >= node.time.end()
+			# Case 3: node is fully overlapped by rule
+			# time.end() >= node.time.end()
 			if precedence:
 				# Not including this node in the return statement effectively
 				# eliminates it. However, things aren't this simple. We need to
@@ -236,33 +275,42 @@ class RuleChain(object):
 				node.next = node2
 				return node1
 		
+		# The case where rule occured before node was relatively straightforward.
+		# Now, rule and node occur at the same time, which means that most
+		# likely either rule or node is omitted.
 		if tempTime.toSeconds() == node.time.toSeconds():
 			if not precedence:
 				# Ignore the rule
 				return node
 			
-			# Three cases: tempTime.duration and node.time.duration are True/False
-			# Case 1
+			# We've established that the rule has precedence. Now it's just a
+			# matter of finding out how much of node (and its children) to
+			# delete.
+			
+			# Three cases
+			# Case 1: No rule duration
 			if not tempTime.duration:
 				# Replace the node
 				return RuleNode(rule, time, node.next)
 			
-			# Case 2
-			if not node.time.duration: # and tempTime.duration
+			# Case 2: Rule duration, but no node duration
+			if not node.time.duration:
 				# Peek ahead at the future node
 				if node.next:
 					tempTime2 = Time(node.next.time.hours, time.minutes, time.seconds)
 					tempTime2.duration = time.duration
 					if tempTime2.end() > node.next.time.toSeconds():
-						# Replace the node, and make sure that we replace any other
-						# overlapped nodes (recursively, of course)
+						# This node is fully engulfed. Replace the node, and
+						# make sure that we replace any other overlapped nodes
+						# (recursively, of course)
 						# parent node -> node1 -> node.next
 						node1 = self.insert(node.next, rule, time, ruleChainHour)
 						return node1
+				# Make this node start at the end of this rule
 				node.time = Time.fromSeconds(tempTime.end())
 				return RuleNode(rule, time, node)
 			
-			# Case 3: node.time.duration and tempTime.duration
+			# Case 3: Rule duration AND node duration. Let the battle begin!
 			if tempTime.end() >= node.time.end():
 				# Replace the node and any following nodes if necessary
 				node1 = self.insert(node.next, rule, time, ruleChainHour)
@@ -444,6 +492,12 @@ class RuleChain(object):
 		return parts
 	
 	def lookup(self, time):
+		'''
+		Solve for the given time. Because the heavy lifting was done when
+		creating the RuleChain, looking up a rule is a straightforward task.
+		Once the rule is located, stringify-ing is as simple as converting each
+		token to its unicode representation.
+		'''
 		ruleChain = self.rules[time.hours % (24 if self.use24 else 12)]
 		tokens = []
 		for token in self.lookupRecursive(ruleChain, time):
@@ -456,6 +510,7 @@ class RuleChain(object):
 		return tokens
 	
 	def lookupRecursive(self, node, time):
+		'''Basic linked list node transversal'''
 		if node == None:
 			log('ERROR: No node, returning []')
 			return []
@@ -507,6 +562,10 @@ class Solver(object):
 			self.rules.add(timeObject, timeString)
 	
 	def resolveTime(self, time):
+		'''
+		Resolving a time is simple: update the time reference, lookup the rule
+		and convert the tokens to strings.
+		'''
 		# Symbols resolve themselves against self.time, so clone the fields
 		# instead of overwriting the object
 		self.time.hours = time.hours
@@ -515,4 +574,8 @@ class Solver(object):
 		return self.rules.lookup(time)
 	
 	def countNodes(self):
+		'''
+		For statistical purposes, the number of nodes in the RuleChain can be
+		counted.
+		'''
 		return self.rules.countNodes()
