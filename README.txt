@@ -74,7 +74,7 @@ A theme is an XML file with the following tags:
     <background> tag optional.
 * <active>
 * <inactive>
-    The text color and active (highlighted) and inactive letters.
+    The text color of active (highlighted) and inactive letters.
 
 If you are a skin author and want a theme to be the default for your skin, post
 your theme and skin ID in the forum and I'll have my people talk to your

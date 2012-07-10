@@ -79,7 +79,7 @@ class Symbol(Token):
 		'''
 		Convert the symbol to a string. If the stringTable entry for the
 		calculated number has a space, then the returned value will also have
-		a space and therefore will need to be split. The the string table entry
+		a space and therefore will need to be split. If the string table entry
 		does not exist, an empty string is returned.
 		'''
 		if self.unit == 'h':
@@ -203,7 +203,7 @@ class RuleChain(object):
 		declared, then it defaults to the GCD). Rule with no duration are
 		considered to be rules with INFINITE duration. Variant rules CAN have a
 		duration; this acts to give them a lower priority in times past the end
-		of the duration.
+		of the duration and a higher priority in times during the duration.
 		
 		The return value of this function is a RuleNode which (in the first
 		level deep) becomes the new root node for that hour in the RuleChain.
