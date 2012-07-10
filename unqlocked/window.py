@@ -88,7 +88,14 @@ class UnqlockedWindow(xbmcgui.WindowXMLDialog):
 	def changeTheme(self):
 		self.config.loadNextTheme()
 		background = self.getControl(gui.CONTROL_BACKGROUND)
-		background.setColorDiffuse('0x' + self.config.theme.background)
+		if self.config.theme.isHexColor(self.config.theme.background):
+			# setColorDiffuse() expects 0xAARRGGBB
+			background.setColorDiffuse('0x' + self.config.theme.background)
+		else:
+			# As of https://github.com/xbmc/xbmc/commit/44472bc64, setColorDiffuse()
+			# can accept a skin color as well as a hex code. If your XBMC is older,
+			# the background will be transparent.
+			background.setColorDiffuse(self.config.theme.background)
 		
 		# Always complain about XBMC's missing features
 		log('Unable to change text color: Not implemented in XBMC!')

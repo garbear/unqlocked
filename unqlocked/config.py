@@ -214,14 +214,16 @@ class Theme:
 				self.imageWidth = 1280
 				self.imageHeight = 720
 			# In SS mode, the background is black so ignore the alpha channel
-			if xbmc.getCondVisibility('System.ScreenSaverActive'):# and len(self.background) == 8:
-				isHex = lambda x: (ord('0') <= ord(x) and ord(x) <= ord('9')) or \
-				                  (ord('A') <= ord(x) and ord(x) <= ord('F')) or \
-				                  (ord('a') <= ord(x) and ord(x) <= ord('f'))
+			if xbmc.getCondVisibility('System.ScreenSaverActive'):
 				# Proceed if all chars are hex
-				if [isHex(c) for c in self.background].count(False) == 0:
+				if self.isHexColor(self.background):
 					self.background = 'ff' + self.background[2:]
-					log('NewBackground: ' + self.background)
 		except:
 			log('Error parsing theme file!')
 			sys.exit()
+	
+	def isHexColor(self, color):
+		isHex = lambda x: (ord('0') <= ord(x) and ord(x) <= ord('9')) or \
+		                  (ord('A') <= ord(x) and ord(x) <= ord('F')) or \
+		                  (ord('a') <= ord(x) and ord(x) <= ord('f'))
+		return len(color) == 8 and [isHex(char) for char in color].count(False) == 0
