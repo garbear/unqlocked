@@ -76,7 +76,8 @@ class Symbol(Token):
 		'''
 		Convert the symbol to a string. If the stringTable entry for the
 		calculated number has a space, then the returned value will also have
-		a space and will need to be split.
+		a space and will need to be split. The the string table entry does not
+		exist, an empty string is returned.
 		'''
 		if self.unit == 'h':
 			id = self.transform(self.timeSource.hours)
@@ -84,7 +85,10 @@ class Symbol(Token):
 			id = self.transform(self.timeSource.minutes)
 		elif self.unit == 's':
 			id = self.transform(self.timeSource.seconds)
-		return self.stringTable[id]
+		# If id is not defined, return an empty string
+		if id not in self.stringTable:
+			log('Error: no string defined for id %d' % id)
+		return self.stringTable.get(id, '')
 
 
 class Compound(Token):
@@ -444,6 +448,8 @@ class RuleChain(object):
 		tokens = []
 		for token in self.lookupRecursive(ruleChain, time):
 			s = unicode(token)
+			if s == '':
+				continue # Error - string table ID not found
 			# Need to split up multi-word tokens, such as in the case:
 			# <string id="25">twenty five</string>
 			tokens.extend(s.split(' ') if ' ' in s else [s])

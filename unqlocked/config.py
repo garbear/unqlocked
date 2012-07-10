@@ -165,7 +165,10 @@ class Layout:
 			if 'id' not in string.attrib:
 				log('Warning: found <string> tag with no "id" attribute')
 				continue
-			self.strings[int(string.attrib['id'])] = string.text.lower()
+			if string.text == None or string.text.strip() == '':
+				log('Warning: empty <string> tag for id=%s' % string.attrib['id'])
+				continue
+			self.strings[int(string.attrib['id'])] = string.text.strip().lower()
 
 
 class Theme:
