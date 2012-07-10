@@ -22,6 +22,14 @@ import xbmc
 PROPERTY_ACTIVE = 'Unqlocked.%i.Highlight'
 PROPERTY_INACTIVE = 'Unqlocked.%i.Background'
 
+BACKGROUND_IMAGE = 'unqlocked-1px-white.png'
+
+CONTROL_BACKGROUND = 1
+CONTROL_IMAGE      = 2
+CONTROL_PANEL      = 3
+CONTROL_LABEL1     = 4
+CONTROL_LABEL2     = 5
+
 WIDTH = 500
 HEIGHT = 500
 
@@ -68,7 +76,7 @@ class Matrix(object):
 	def toXML(self):
 		'''Generate the xml representation of the letter matrix'''
 		# <control type="panel">
-		control = Element('control', type='panel')
+		control = Element('control', type='panel', id=str(CONTROL_PANEL))
 		if True:
 			SubElement(control, 'posx').text = str(self.posx)
 			SubElement(control, 'posy').text = str(self.posy)
@@ -85,8 +93,8 @@ class Matrix(object):
 			# <itemlayout>
 			itemlayout = SubElement(control, 'itemlayout', height=str(self.letterHeight), width=str(self.letterWidth))
 			if True:
-				self.addItemLayout(itemlayout, self.theme.inactive, 'ListItem.Label')
-				self.addItemLayout(itemlayout, self.theme.active, 'ListItem.Label2')
+				self.addItemLayout(itemlayout, self.theme.inactive, 1)
+				self.addItemLayout(itemlayout, self.theme.active, 2)
 			# </itemlayout>
 			SubElement(control, 'focusedlayout', height=str(self.height), width=str(self.width))
 			# <content>
@@ -101,12 +109,22 @@ class Matrix(object):
 		return control
 	
 	def addItemLayout(self, itemlayout, color, infolabel):
-		'''Add a control to an <itemlayout> tag. infolabel one of the two
-		strings: "ListItem.Label" or "ListItem.Label2" '''
+		'''
+		Add a control to an <itemlayout> tag.
+		infolabel (int) - 1 or 2
+		'''
+		if infolabel == 1:
+			controlid = CONTROL_LABEL1
+			label = 'ListItem.Label'
+		else: # infolabel == 2
+			controlid = CONTROL_LABEL2
+			label = 'ListItem.Label2'
+		
 		# <control type="label">
-		subControl = SubElement(itemlayout, 'control', type='label')
+		subControl = SubElement(itemlayout, 'control', type='label', id=str(controlid))
 		if True:
-			SubElement(subControl, 'posx').text = str(10)
+			# Center the letter horizontally
+			SubElement(subControl, 'posx').text = str(self.letterWidth / 2)
 			SubElement(subControl, 'posy').text = str(0)
 			SubElement(subControl, 'width').text = str(self.letterWidth)
 			SubElement(subControl, 'height').text = str(self.letterHeight)
@@ -116,7 +134,7 @@ class Matrix(object):
 			SubElement(subControl, 'align').text = 'center'
 			SubElement(subControl, 'aligny').text = 'center'
 			# <label>[B]$INFO[ListItem.Label][/B]</label>
-			SubElement(subControl, 'label').text = '[B]$INFO[%s][/B]' % infolabel
+			SubElement(subControl, 'label').text = '[B]$INFO[%s][/B]' % label
 		# </control>
 	
 	def getFont(self):
@@ -192,10 +210,11 @@ class Image(object):
 		self.height = height
 		self.image = image
 		self.diffuse = diffuse
+		self.id = CONTROL_BACKGROUND if image == BACKGROUND_IMAGE else CONTROL_IMAGE
 	
 	def toXML(self):
 		# <control>
-		control = Element('control', type='image')
+		control = Element('control', type='image', id=str(self.id))
 		if True:
 			SubElement(control, 'posx').text = str((1280 - self.width) / 2)
 			SubElement(control, 'posy').text = str((720 - self.height) / 2)
@@ -241,18 +260,31 @@ class Window(object):
 			# Fade in for 1.0 second (but not in screensaver mode)
 			if not self.screensaverMode:
 				SubElement(window, 'animation', effect='fade', time=str(1000)).text = 'WindowOpen'
+			
 			# <controls>
 			controls = SubElement(window, 'controls')
 			if True:
-				backgroundColor = Image(1280, 720, 'unqlocked-1px-white.png', self.theme.background)
-				controls.append(backgroundColor.toXML())
+				# <control type="image">
+				color = Image(1280, 720, BACKGROUND_IMAGE, self.theme.background)
+				controls.append(color.toXML())
+				# </control>
+				
+				# <control type="image">
 				if self.theme.image:
-					backgroundImage = Image(self.theme.imageWidth, self.theme.imageHeight, self.theme.image)
-					controls.append(backgroundImage.toXML())
+					image = Image(self.theme.imageWidth, self.theme.imageHeight, self.theme.image)
+				else:
+					# Placeholder for if we change the theme by pressing T
+					image = Image(1280, 720, '-')
+				controls.append(image.toXML())
+				# </control>
+				
 				#sprites = Sprites(self.layout, self.theme)
 				#controls.append(sprites.toXML())
+				
+				# <control type="panel">
 				matrix = Matrix(self.letters, self.layout, self.theme)
 				controls.append(matrix.toXML())
+				# </control>
 			# </controls>
 		# </window>
 		return window
