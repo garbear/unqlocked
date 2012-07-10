@@ -156,7 +156,8 @@ class Matrix(object):
 				# (guaranteed to exist regardless of skin)
 				if 'id' not in set.attrib or set.attrib['id'] != 'Default':
 					continue
-				log('Font set loaded. Searching for a font smaller than %dpt' % desiredSize)
+				# Add one so we don't lie when saying "smaller" (versus "smaller than or equal to")
+				log('Font set loaded. Searching for a font smaller than %dpt' % (desiredSize + 1))
 				# Index the discovered fonts into two categories
 				fontsWithoutStyle = {}
 				fontsWithStyle = {}
