@@ -27,8 +27,6 @@ BACKGROUND_IMAGE = 'unqlocked-1px-white.png'
 CONTROL_BACKGROUND = 1
 CONTROL_IMAGE      = 2
 CONTROL_PANEL      = 3
-CONTROL_LABEL1     = 4
-CONTROL_LABEL2     = 5
 
 WIDTH = 500
 HEIGHT = 500
@@ -113,15 +111,10 @@ class Matrix(object):
 		Add a control to an <itemlayout> tag.
 		infolabel (int) - 1 or 2
 		'''
-		if infolabel == 1:
-			controlid = CONTROL_LABEL1
-			label = 'ListItem.Label'
-		else: # infolabel == 2
-			controlid = CONTROL_LABEL2
-			label = 'ListItem.Label2'
+		label = 'ListItem.Label' if infolabel == 1 else 'ListItem.Label2'
 		
 		# <control type="label">
-		subControl = SubElement(itemlayout, 'control', type='label', id=str(controlid))
+		subControl = SubElement(itemlayout, 'control', type='label')
 		if True:
 			# Center the letter horizontally
 			SubElement(subControl, 'posx').text = str(self.letterWidth / 2)

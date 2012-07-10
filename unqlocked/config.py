@@ -24,19 +24,21 @@ import xbmcaddon
 
 class Config:
 	def __init__(self):
-		self.scriptId  = 'script.unqlocked'
-		self.addon     = xbmcaddon.Addon(self.scriptId)
-		self.addonName = self.addon.getAddonInfo('name')
-		self.cwd       = self.addon.getAddonInfo('path')
-		self.author    = self.addon.getAddonInfo('author')
-		self.version   = self.addon.getAddonInfo('version')
-		self.profile   = xbmc.translatePath(self.addon.getAddonInfo('profile'))
-		self.ssMode    = xbmc.getCondVisibility('System.ScreenSaverActive')
-		#self.language  = self.addon.getLocalizedString
-		self.layoutDir = os.path.join(self.cwd, 'layouts')
-		self.layout    = Layout(self.getLayoutFile(self.layoutDir))
-		self.themeDir  = os.path.join(self.cwd, 'themes')
-		self.theme     = Theme(self.getThemeFile(self.themeDir))
+		self.scriptId   = 'script.unqlocked'
+		self.addon      = xbmcaddon.Addon(self.scriptId)
+		self.addonName  = self.addon.getAddonInfo('name')
+		self.cwd        = self.addon.getAddonInfo('path')
+		self.author     = self.addon.getAddonInfo('author')
+		self.version    = self.addon.getAddonInfo('version')
+		self.profile    = xbmc.translatePath(self.addon.getAddonInfo('profile'))
+		self.ssMode     = xbmc.getCondVisibility('System.ScreenSaverActive')
+		#self.language   = self.addon.getLocalizedString
+		self.layoutDir  = os.path.join(self.cwd, 'layouts')
+		self.layoutName = self.getLayoutFile(self.layoutDir)
+		self.layout     = Layout(os.path.join(self.layoutDir, self.layoutName))
+		self.themeDir   = os.path.join(self.cwd, 'themes')
+		self.themeName  = self.getThemeFile(self.themeDir)
+		self.theme      = Theme(os.path.join(self.themeDir, self.themeName))
 	
 	def getLayoutFile(self, layoutDir):
 		layout = self.addon.getSetting('layout')
@@ -56,7 +58,7 @@ class Config:
 				layout = map['english']
 			self.addon.setSetting('layout', layout)
 		# .xml was masked in the settings
-		return os.path.join(layoutDir, layout + '.xml')
+		return layout + '.xml'
 	
 	def getThemeFile(self, themeDir):
 		theme = self.addon.getSetting('theme')
@@ -73,7 +75,25 @@ class Config:
 				theme = map['skin.confluence']
 			self.addon.setSetting('theme', theme)
 		# .xml was masked in the settings
-		return os.path.join(themeDir, theme + '.xml')
+		return theme + '.xml'
+	
+	def loadNextTheme(self):
+		themes = [theme for theme in os.listdir(self.themeDir) if theme[-4:] == '.xml']
+		count = len(themes)
+		for i in range(count):
+			if themes[i] == self.themeName:
+				self.themeName = themes[(i + 1) % count]
+				self.theme = Theme(os.path.join(self.themeDir, self.themeName))
+				break
+	
+	def loadNextLayout(self):
+		layouts = [layout for layout in os.listdir(self.layoutDir) if layout[-4:] == '.xml']
+		count = len(layouts)
+		for i in range(count):
+			if layouts[i] == self.layoutName:
+				self.layoutName = layouts[(i + 1) % count]
+				self.layout = Layout(os.path.join(self.layoutDir, self.layoutName))
+				break
 
 
 class Layout:
@@ -150,9 +170,12 @@ class Layout:
 
 class Theme:
 	'''A theme has several elements that can be accessed through this class:
-	* self.background - The background color
-	* self.active     - The color of enabled tiles
-	* self.inactive   - The color of disabled tiles
+	* self.background  - The background color
+	* self.active      - The color of enabled tiles
+	* self.inactive    - The color of disabled tiles
+	* self.image       - The filename of a background image, or None of omitted
+	* self.imageWidth  - Image width, or 1280 if image is None
+	* self.imageHeight - Image height, or 720 if image is None
 	'''
 	def __init__(self, file):
 		log('Using theme: ' + os.path.basename(file))
@@ -179,6 +202,8 @@ class Theme:
 				# If an image wasn't found, background is mandatory
 				self.background = root.find('background').text
 				self.image = None
+				self.imageWidth = 1280
+				self.imageHeight = 720
 		except:
 			log('Error parsing theme file!')
 			sys.exit()

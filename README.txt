@@ -20,9 +20,13 @@ screensavers. Until then, this script can also be run from the Programs menu
 like any other add-on.
 
 
+== Do a trick ==
+Run UnQlocked as a script and press L to cycle layouts (same dimensions only).
+
+
 == Creating your own clock ==
 Clocks are defined by an XML layout file in the layouts folder. In the root
-<layout> tag you will need three tags.
+<layout> node you will need three tags.
 * <background>
     A comma-separated list of entities. Each entity can be multiple
     characters (such as L' or AE). Whitespace is ignore, so use multiple lines
@@ -35,7 +39,7 @@ Clocks are defined by an XML layout file in the layouts folder. In the root
     Time strings can use symbols to represent the strings found in the strings
     table. UnQlocked will identify the offset and direction of the symbol and
     propagate it forward in time, making it possible to define a large
-    expression of times using a single string.
+    expression of times using a single time string.
 
 Not everything can be accomplished with symbols, however. If your <time> string
 includes no symbols, it won't be propagated forward and will only occur for
@@ -43,6 +47,7 @@ that instant. To extend such a string, you can use a "duration" attribute in
 the same format as the "id" attribute. For example:
     <time id="2:00">%2h% o'clock</time>
     <time id="2:30" duration="0:10">lunch time</time>
+
 Here, 2:25 and 2:40 would read "two o'clock", and 2:30 and 2:35 would read
 "lunch time". Remember that your layout needs all these strings embedded in the
 background. Also, note that the duration attribute can be used in times with
@@ -72,3 +77,9 @@ A theme is an XML file with the following tags:
 * <active>
 * <inactive>
     The text color and active (highlighted) and inactive letters.
+
+If you are a skin author and want a theme to be the default for your skin, post
+your theme and skin ID in the forum and I'll have my people talk to your
+people.
+
+Thanks for trying UnQlocked!

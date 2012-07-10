@@ -70,8 +70,10 @@ class StateMachine(threading.Thread):
 		#	log('Exception thrown in StateMachine thread')
 		#	self.waitCondition.release()
 		#	self.stop()
-		self.waitCondition.release()
+		log('StateMachine shutting down')
 		self.cleanup()
+		self.waitCondition.release()
+		log('StateMachine finished shutting down')
 	
 	def shouldStop(self):
 		'''
@@ -104,20 +106,18 @@ class QlockThread(StateMachine):
 			for col in range(self.layout.width):
 				self.layout.matrix[row][col] = self.layout.matrix[row][col].lower()
 		
-		# Let the solver know about the default delay. It will need this
-		# information once it has parsed a times string into tokens.
 		log('Creating the solver')
-		
 		now = datetime.datetime.now()
 		start = now.hour * 60 * 60 + now.minute * 60 + now.second + now.microsecond / 1000000.0
 		
-		self.solver = solver.Solver(layout.times, layout.use24, layout.strings, delay)
-		nodes = self.solver.countNodes()
+		# Let the solver know about the default delay. It will need this
+		# information once it has parsed a times string into tokens.
+		self.solver = solver.Solver(layout, delay)
 		
+		nodes = self.solver.countNodes()
 		now = datetime.datetime.now()
 		stop = now.hour * 60 * 60 + now.minute * 60 + now.second + now.microsecond / 1000000.0
-		
-		log('Solver created in %f seconds with %d nodes and %d rules' % ((stop - start), nodes, len(layout.times)))
+		log('Solver created in %f seconds with %d nodes and %d rules' % (stop - start, nodes, len(layout.times)))
 	
 	def step(self, time):
 		# Ask the solver for the time

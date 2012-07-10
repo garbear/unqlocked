@@ -478,25 +478,25 @@ class RuleChain(object):
 
 
 class Solver(object):
-	def __init__(self, times, use24, strings, defaultDuration):
-		self.strings = strings
+	def __init__(self, layout, defaultDuration):
+		self.strings = layout.strings
 		# Time reference used to stringify symbols
 		self.time = Time(0, 0, 0)
 		
 		# Use 0 only for 24-hour mode, unless a 0 is found in 12-hour mode or
 		# a 24 is found in 24-hour mode
-		use0 = use24
-		for timeObject in times.keys():
-			if not use24 and timeObject.hours == 0:
+		use0 = layout.use24
+		for timeObject in layout.times.keys():
+			if not layout.use24 and timeObject.hours == 0:
 				use0 = True
 				break
-			if use24 and timeObject.hours == 24:
+			if layout.use24 and timeObject.hours == 24:
 				use0 = False
 				break
 		
-		self.rules = RuleChain(self.strings, self.time, use24, use0, defaultDuration)
-		for timeObject in sorted(times.keys(), key=lambda t: t.toSeconds()):
-			timeString = times[timeObject]
+		self.rules = RuleChain(self.strings, self.time, layout.use24, use0, defaultDuration)
+		for timeObject in sorted(layout.times.keys(), key=lambda t: t.toSeconds()):
+			timeString = layout.times[timeObject]
 			timeObject.hours = timeObject.hours % 12
 			self.rules.add(timeObject, timeString)
 	

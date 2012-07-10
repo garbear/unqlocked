@@ -60,11 +60,15 @@ class Master:
 		# Now create the GUI window
 		self.window = window.UnqlockedWindow('unqlocked.xml', config.profile, 'Default')
 		self.window.setConfig(config)
+		self.window.setLayoutCallback(self.layoutCallback)
+		self.window.setDemoCallback(self.demoCallback)
 		self.window.drawBackground()
 		
 		# Create the threads
 		self.qlockThread = statemachine.QlockThread(self.window, config.layout)
 		#self.spriteThread = statemachine.SpriteThread(self.window, config) # not implemented yet
+		
+		self.config = config
 	
 	def spin(self):
 		self.qlockThread.start()
@@ -77,5 +81,37 @@ class Master:
 			xbmc.sleep(25)
 		
 		self.window.doModal()
+		try:
+			self.qlockThread.stop()
+			#self.spriteThread.stop()
+		except:
+			log('Error occurred while stopping background threads')
+	
+	def layoutCallback(self):
 		self.qlockThread.stop()
-		#self.spriteThread.stop()
+		# Give it some time to reacquire the lock for cleanup. When cleanup is
+		# complete, the mutex will be released, so wait on it before continuing.
+		xbmc.sleep(50)
+		self.qlockThread.waitCondition.acquire()
+		self.qlockThread.waitCondition.release()
+		
+		# Must match these values (TODO: Recreate window for different-size layouts)
+		height = self.config.layout.height
+		width = self.config.layout.width
+		while True:
+			self.config.loadNextLayout()
+			if height == self.config.layout.height and width == self.config.layout.width:
+				break # Found a same-sized layout
+		
+		self.window.drawBackground()
+		self.qlockThread = statemachine.QlockThread(self.window, self.config.layout)
+		self.qlockThread.start()
+	
+	def demoCallback(self):
+		pass
+	
+	def refresh(self):
+		log('Stopping Qlock thread')
+		self.qlockThread.stop()
+		log('Qlock thread stopped? Sleeping')
+		
