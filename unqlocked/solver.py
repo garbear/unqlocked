@@ -64,7 +64,7 @@ class Symbol(Token):
 		else:
 			# If minutes > 30 and the symbol has a number < 30, then assume it's
 			# counting down. Example: <time id="1:35">it is %25m% to %2h%</time>
-			if not (ref > 30 and metric < 30):
+			if not (ref > 30 and metric < 30 or ref < 30 and metric > 30):
 				self.transform = lambda x: (x + metric - ref) % 60 # Counting up
 			else:
 				self.transform = lambda x: -(x - metric - ref) % 60 # Counting down
