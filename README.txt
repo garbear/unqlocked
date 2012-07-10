@@ -63,12 +63,10 @@ of copy-pasting for anything outside the "X hours Y minutes Z seconds" format.
 == Creating your own theme ==
 A theme is an XML file with the following tags:
 * <background>
-    This color (AARRGGBB) is applied fullscreen. If the AA channel is less than
-    FF, the background will be slightly transparent. This means that when being
-    run as a script, the skin will still be visible; when being run as a
-    screensaver, the underlying window is black, so the background will just
-    appear darker than it should. Skin color names can also be used here (but
-    the skin must support it, so try to stick with common names).
+    This color (AARRGGBB) is applied fullscreen. In screensaver mode, the alpha
+    channel is ignore and the background is fully opaque. Skin color names can
+    also be used here (but the skin must support it, so try to stick with
+    common names).
 * <image>
     An optional image behind the clock. Attributes "width" and "height" can be
     specified (the image is always centered). If width and height are set to
