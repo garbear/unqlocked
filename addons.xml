@@ -2,7 +2,7 @@
 <addons>
 <addon id="script.unqlocked"
        name="UnQlocked"
-       version="1.0"
+       version="1.0.1"
        provider-name="Garrett (garbear)">
   <requires>
     <import addon="xbmc.python" version="2.1"/>

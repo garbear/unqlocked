@@ -1,2 +1,5 @@
+[B]2013-02-01 Version 1.0.1 by Garbear[/B]
+. Ability for add-on to automatically update itself.
+
 [B]2012-07-07 Version 1.0 by Garbear[/B]
 . Initial release. See README.txt for information.
