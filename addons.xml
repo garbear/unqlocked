@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addons>
 <addon id="script.unqlocked"
        name="UnQlocked"
        version="1.0"
@@ -11,9 +12,16 @@
              library="default.py"/>
   <extension point="xbmc.python.script"
              library="default.py"/>
+  <extension point="xbmc.addon.repository"
+             name="Unqlocked Update Repository">
+    <info compressed="false">https://github.com/garbear/unqlocked/raw/master/addons.xml</info>
+    <checksum>https://github.com/garbear/unqlocked/raw/master/addons.xml.md5</checksum>
+    <datadir zip="false">https://github.com/garbear/unqlocked/raw/master/repo/</datadir>
+  </extension>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">UnQlocked script</summary>
     <description lang="en">Script to display the current time using common phrases instead of numbers. Originally an unabashed ripoff of Biegert &amp; Funk's awesome product, this script has been extended to support a much larger set of languages and configurations.</description>
     <platform>all</platform>
   </extension>
 </addon>
+</addons>

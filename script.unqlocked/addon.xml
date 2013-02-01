@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.unqlocked"
+       name="UnQlocked"
+       version="1.0"
+       provider-name="Garrett (garbear)">
+  <requires>
+    <import addon="xbmc.python" version="2.1"/>
+    <import addon="script.module.elementtree" version="1.2.7"/>
+  </requires>
+  <extension point="xbmc.ui.screensaver"
+             library="default.py"/>
+  <extension point="xbmc.python.script"
+             library="default.py"/>
+  <extension point="xbmc.addon.repository"
+             name="Unqlocked Update Repository">
+    <info compressed="false">http://openelec-dev-update.googlecode.com/hg/addons.xml</info>
+    <checksum>http://openelec-dev-update.googlecode.com/hg/addons.xml.md5</checksum>
+    <datadir zip="false">http://openelec-dev-update.googlecode.com/hg</datadir>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">UnQlocked script</summary>
+    <description lang="en">Script to display the current time using common phrases instead of numbers. Originally an unabashed ripoff of Biegert &amp; Funk's awesome product, this script has been extended to support a much larger set of languages and configurations.</description>
+    <platform>all</platform>
+  </extension>
+</addon>
