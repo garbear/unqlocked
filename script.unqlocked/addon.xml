@@ -13,9 +13,9 @@
              library="default.py"/>
   <extension point="xbmc.addon.repository"
              name="Unqlocked Update Repository">
-    <info compressed="false">https://github.com/garbear/unqlocked/raw/master/addons.xml</info>
-    <checksum>https://github.com/garbear/unqlocked/raw/master/addons.xml.md5</checksum>
-    <datadir zip="false">https://github.com/garbear/unqlocked/raw/master/repo/</datadir>
+    <info compressed="false">https://raw.github.com/garbear/unqlocked/master/addons.xml</info>
+    <checksum>https://raw.github.com/garbear/unqlocked/master/addons.xml.md5</checksum>
+    <datadir zip="true">https://raw.github.com/garbear/unqlocked/master/release/</datadir>
   </extension>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">UnQlocked script</summary>

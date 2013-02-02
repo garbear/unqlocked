@@ -16,7 +16,7 @@
              name="Unqlocked Update Repository">
     <info compressed="false">https://raw.github.com/garbear/unqlocked/master/addons.xml</info>
     <checksum>https://raw.github.com/garbear/unqlocked/master/addons.xml.md5</checksum>
-    <datadir zip="false">https://raw.github.com/garbear/unqlocked/master/</datadir>
+    <datadir zip="true">https://raw.github.com/garbear/unqlocked/master/release/</datadir>
   </extension>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">UnQlocked script</summary>
